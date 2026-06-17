@@ -138,9 +138,24 @@ class _NewBillScreenState extends State<NewBillScreen>{
                     subtitle: Text(
                         'Qty: ${items[index]['qty']} | Rate: ${items[index]['rate']}',
                     ),
-                    trailing: Text(
-                        '₹${items[index]['amount']}',
+                    trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+
+                        Text(
+                            '₹${items[index]['amount']}',
+                         ),
+
+                         IconButton(
+                            icon: const Icon(Icons.delete),
+                             onPressed: () {
+                             setState(() {
+                                items.removeAt(index);
+                             });
+                        },
                     ),
+                ],
+            ),
                 );
             },
         ),
