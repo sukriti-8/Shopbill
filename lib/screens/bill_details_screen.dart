@@ -56,13 +56,32 @@ class BillDetailsScreen extends StatelessWidget {
               ),
             ),
 
+           Text(
+            'Subtotal: ₹${bill.grandTotal + bill.discount}',
+            style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                ),
+            ),
+
+            const SizedBox(height: 10),
+
             Text(
-              'Grand Total: ₹${bill.grandTotal}',
-              style: const TextStyle(
+                'Discount: ₹${bill.discount}',
+                style: const TextStyle(
+                 fontSize: 18,
+                ),
+            ),
+
+            const SizedBox(height: 10),
+
+            Text(
+                'Grand Total: ₹${bill.grandTotal}',
+            style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-              ),
             ),
+         ), 
           ],
         ),
       ),

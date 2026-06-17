@@ -21,12 +21,14 @@ class _NewBillScreenState extends State<NewBillScreen> {
   int qty = 0;
   double rate = 0;
   double amount = 0;
+  double discount = 0;
 
   List<BillItem> items = [];
 
   final itemController = TextEditingController();
   final qtyController = TextEditingController();
   final rateController = TextEditingController();
+  final discountController = TextEditingController();
 
   double getGrandTotal() {
     double total = 0;
@@ -37,6 +39,9 @@ class _NewBillScreenState extends State<NewBillScreen> {
 
     return total;
   }
+  double getFinalTotal() {
+    return getGrandTotal() - discount;
+}
 
   @override
   Widget build(BuildContext context) {
@@ -159,8 +164,8 @@ class _NewBillScreenState extends State<NewBillScreen> {
                         billNo: widget.savedBills.length + 1,
                         date: DateTime.now(),
                         items: List.from(items),
-                        discount: 0,
-                        grandTotal: getGrandTotal(),
+                        discount: discount,
+                        grandTotal: getFinalTotal(),
                       ),
                     );
 
@@ -172,10 +177,12 @@ class _NewBillScreenState extends State<NewBillScreen> {
                     qty = 0;
                     rate = 0;
                     amount = 0;
+                    discount = 0;
 
                     itemController.clear();
                     qtyController.clear();
                     rateController.clear();
+                    discountController.clear();
                   });
                 },
                 child: const Text('Save Bill'),
@@ -214,9 +221,42 @@ class _NewBillScreenState extends State<NewBillScreen> {
               ),
 
               const SizedBox(height: 10),
+              TextField(
+                controller: discountController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                    labelText: 'Discount',
+                    border: OutlineInputBorder(),
+                 ),
+                 onChanged: (value) {
+                    setState(() {
+                        discount = double.tryParse(value) ?? 0;
+                     });
+                 },
+                ),
 
+                const SizedBox(height: 15),
+
+                Text(
+                    'Subtotal: ₹${getGrandTotal()}',
+                     style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                     ),
+                ),
+
+                const SizedBox(height: 10),
+
+                Text(
+                    'Discount: ₹$discount',
+                    style: const TextStyle(
+                     fontSize: 18,
+                    ),
+                ),
+
+              const SizedBox(height: 10),
               Text(
-                'Grand Total: ₹${getGrandTotal()}',
+                'Grand Total: ₹${getFinalTotal()}',
                 style: const TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
