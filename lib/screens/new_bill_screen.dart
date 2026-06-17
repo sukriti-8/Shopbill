@@ -14,6 +14,15 @@ class _NewBillScreenState extends State<NewBillScreen>{
     final itemController = TextEditingController();
     final qtyController = TextEditingController();
     final rateController = TextEditingController();
+    double getGrandTotal() {
+        double total = 0;
+
+    for (var item in items) {
+        total += item['amount'];
+  }
+
+  return total;
+}
 
   @override
   Widget build(BuildContext context) {
@@ -135,6 +144,15 @@ class _NewBillScreenState extends State<NewBillScreen>{
                 );
             },
         ),
+    ),
+    const SizedBox(height: 10),
+
+    Text(
+        'Grand Total: ₹${getGrandTotal()}',
+    style: const TextStyle(
+        fontSize: 22,
+        fontWeight: FontWeight.bold,
+     ),
     ),
     ],
   ),
