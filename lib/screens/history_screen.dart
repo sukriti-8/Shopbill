@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/bill.dart';
+import 'bill_details_screen.dart';
 
 class HistoryScreen extends StatelessWidget {
   final List<Bill> savedBills;
@@ -23,9 +24,19 @@ class HistoryScreen extends StatelessWidget {
           return ListTile(
             title: Text('Bill #${bill.billNo}'),
             subtitle: Text(
-              '₹${bill.grandTotal}',
-            ),
-          );
+                '₹${bill.grandTotal}',
+             ),
+             onTap: () {
+                Navigator.push(
+                context,
+                MaterialPageRoute(
+                 builder: (context) => BillDetailsScreen(
+                    bill: bill,
+                 ),
+             ),
+         );
+       },
+      );
         },
       ),
     );
