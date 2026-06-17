@@ -18,6 +18,7 @@ class NewBillScreen extends StatefulWidget {
 
 class _NewBillScreenState extends State<NewBillScreen> {
   String itemName = '';
+  String partyName = '';
   int qty = 0;
   double rate = 0;
   double amount = 0;
@@ -26,6 +27,7 @@ class _NewBillScreenState extends State<NewBillScreen> {
   List<BillItem> items = [];
 
   final itemController = TextEditingController();
+  final partyController = TextEditingController();
   final qtyController = TextEditingController();
   final rateController = TextEditingController();
   final discountController = TextEditingController();
@@ -71,6 +73,18 @@ class _NewBillScreenState extends State<NewBillScreen> {
               ),
 
               const SizedBox(height: 20),
+              TextField(
+                controller: partyController,
+                decoration: const InputDecoration(
+                    labelText: 'Party Name',
+                    border: OutlineInputBorder(),
+                ),
+                onChanged: (value) {
+                    partyName = value;
+                },
+            ),
+
+        const SizedBox(height: 15),
 
               TextField(
                 controller: itemController,
@@ -164,6 +178,7 @@ class _NewBillScreenState extends State<NewBillScreen> {
                         billNo: widget.savedBills.length + 1,
                         date: DateTime.now(),
                         items: List.from(items),
+                        partyName: partyName,
                         discount: discount,
                         grandTotal: getFinalTotal(),
                       ),

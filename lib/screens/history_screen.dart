@@ -24,8 +24,8 @@ class HistoryScreen extends StatelessWidget {
           return ListTile(
             title: Text('Bill #${bill.billNo}'),
             subtitle: Text(
-                '₹${bill.grandTotal}',
-             ),
+             '${bill.partyName}\n₹${bill.grandTotal} | ${bill.status.name}',
+            ),
              onTap: () {
                 Navigator.push(
                 context,
