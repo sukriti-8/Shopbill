@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../models/bill_item.dart';
+
 
 class NewBillScreen extends StatefulWidget {
   const NewBillScreen({super.key});
@@ -10,7 +12,7 @@ class _NewBillScreenState extends State<NewBillScreen>{
     int qty = 0;
     double rate = 0;
     double amount = 0;
-    List<Map<String, dynamic>> items = [];
+    List<BillItem> items = [];
     final itemController = TextEditingController();
     final qtyController = TextEditingController();
     final rateController = TextEditingController();
@@ -18,7 +20,7 @@ class _NewBillScreenState extends State<NewBillScreen>{
         double total = 0;
 
     for (var item in items) {
-        total += item['amount'];
+        total += item.amount;
   }
 
   return total;
@@ -109,12 +111,14 @@ class _NewBillScreenState extends State<NewBillScreen>{
      ElevatedButton(
          onPressed: () {
         setState(() {
-        items.add({
-            'itemName': itemName,
-            'qty': qty,
-            'rate': rate,
-            'amount': amount,
-        });
+        items.add(
+            BillItem(
+                itemName: itemName,
+                qty: qty,
+                rate: rate,
+                amount: amount,
+            ),
+        );
 
         print(items);
         itemName = '';
@@ -134,16 +138,16 @@ class _NewBillScreenState extends State<NewBillScreen>{
             itemCount: items.length,
             itemBuilder: (context, index){
                 return ListTile(
-                    title: Text(items[index]['itemName']),
+                    title: Text(items[index].itemName),
                     subtitle: Text(
-                        'Qty: ${items[index]['qty']} | Rate: ${items[index]['rate']}',
+                        'Qty: ${items[index].qty} | Rate: ${items[index].rate}',
                     ),
                     trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
 
                         Text(
-                            '₹${items[index]['amount']}',
+                            '₹${items[index].amount}',
                          ),
 
                          IconButton(
