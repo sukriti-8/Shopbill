@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import '../models/bill.dart';
 
 class HistoryScreen extends StatelessWidget {
-  const HistoryScreen({super.key});
+  final List<Bill> savedBills;
+
+  const HistoryScreen({
+    super.key,
+    required this.savedBills,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -9,8 +15,18 @@ class HistoryScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Bill History'),
       ),
-      body: const Center(
-        child: Text('Bill History Screen'),
+      body: ListView.builder(
+        itemCount: savedBills.length,
+        itemBuilder: (context, index) {
+          final bill = savedBills[index];
+
+          return ListTile(
+            title: Text('Bill #${bill.billNo}'),
+            subtitle: Text(
+              '₹${bill.grandTotal}',
+            ),
+          );
+        },
       ),
     );
   }

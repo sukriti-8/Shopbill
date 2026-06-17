@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
+import '../models/bill.dart';
 import 'new_bill_screen.dart';
 import 'history_screen.dart';
-class HomeScreen extends StatelessWidget {
+
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+
+  List<Bill> savedBills = [];
+  int nextBillNo = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -14,31 +25,39 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('ShopBill'),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const NewBillScreen()
-                    ),
-                );
-              },
-              child: Text('New Bill'),
-            ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const HistoryScreen()
-                    ),
-                );
+            const Text('ShopBill'),
 
+            const SizedBox(height: 20),
+
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NewBillScreen(
+                        savedBills: savedBills,
+                        nextBillNo: nextBillNo,
+                    ),
+                  ),
+                );
               },
-              child: Text('Bill History'),
+              child: const Text('New Bill'),
+            ),
+
+            const SizedBox(height: 10),
+
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HistoryScreen(
+                      savedBills: savedBills,
+                    ),
+                  ),
+                );
+              },
+              child: const Text('Bill History'),
             ),
           ],
         ),

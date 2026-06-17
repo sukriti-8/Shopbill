@@ -1,30 +1,42 @@
 import 'package:flutter/material.dart';
 import '../models/bill_item.dart';
-
+import '../models/bill.dart';
 
 class NewBillScreen extends StatefulWidget {
-  const NewBillScreen({super.key});
+  final List<Bill> savedBills;
+  final int nextBillNo;
+
+  const NewBillScreen({
+    super.key,
+    required this.savedBills,
+    required this.nextBillNo,
+  });
+
   @override
   State<NewBillScreen> createState() => _NewBillScreenState();
 }
-class _NewBillScreenState extends State<NewBillScreen>{
-    String itemName = '';
-    int qty = 0;
-    double rate = 0;
-    double amount = 0;
-    List<BillItem> items = [];
-    final itemController = TextEditingController();
-    final qtyController = TextEditingController();
-    final rateController = TextEditingController();
-    double getGrandTotal() {
-        double total = 0;
+
+class _NewBillScreenState extends State<NewBillScreen> {
+  String itemName = '';
+  int qty = 0;
+  double rate = 0;
+  double amount = 0;
+
+  List<BillItem> items = [];
+
+  final itemController = TextEditingController();
+  final qtyController = TextEditingController();
+  final rateController = TextEditingController();
+
+  double getGrandTotal() {
+    double total = 0;
 
     for (var item in items) {
-        total += item.amount;
-  }
+      total += item.amount;
+    }
 
-  return total;
-}
+    return total;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,150 +44,188 @@ class _NewBillScreenState extends State<NewBillScreen>{
       appBar: AppBar(
         title: const Text('New Bill'),
       ),
-      body: Padding(
-  padding: const EdgeInsets.all(16),
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
 
-      const Text(
-        'Bill No: 1',
-        style: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
+              Text(
+                'Bill No: ${widget.savedBills.length + 1}',
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
 
-      const SizedBox(height: 8),
+              const SizedBox(height: 8),
 
-      const Text('Date: Today'),
+              Text(
+                'Date: ${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}',
+              ),
 
-      const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-      TextField(
-        controller: itemController,
-        onChanged: (value) {
-            itemName = value;
-        },
-        decoration: const InputDecoration(
-            labelText: 'Item Name',
-            border: OutlineInputBorder(),
-        ),
-      ),
-      const SizedBox(height: 15),
+              TextField(
+                controller: itemController,
+                decoration: const InputDecoration(
+                  labelText: 'Item Name',
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) {
+                  itemName = value;
+                },
+              ),
 
-      TextField(
-        controller: qtyController,
-        keyboardType: TextInputType.number,
-        onChanged: (value) {
-         setState(() {
-            qty = int.tryParse(value) ?? 0;
-            amount = qty * rate;
-            });
-        },
-        decoration: const InputDecoration(
-            labelText: 'Quantity',
-            border: OutlineInputBorder(),
-  ),
-),
+              const SizedBox(height: 15),
 
-      const SizedBox(height: 15),
+              TextField(
+                controller: qtyController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Quantity',
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    qty = int.tryParse(value) ?? 0;
+                    amount = qty * rate;
+                  });
+                },
+              ),
 
-      TextField(
-        controller: rateController,
-        keyboardType: TextInputType.number,
-        onChanged: (value) {
-            setState(() {
-                rate = double.tryParse(value) ?? 0;
-                amount = qty * rate;
-            });
-        },
-        decoration: const InputDecoration(
-            labelText: 'Rate',
-            border: OutlineInputBorder(),
-        ),
-      ),
+              const SizedBox(height: 15),
 
-      const SizedBox(height: 20),
+              TextField(
+                controller: rateController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Rate',
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    rate = double.tryParse(value) ?? 0;
+                    amount = qty * rate;
+                  });
+                },
+              ),
 
-     Text(
-        'Amount: ₹$amount',
-         style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-        ),
-     ),
+              const SizedBox(height: 20),
 
-     const SizedBox(height: 20),
+              Text(
+                'Amount: ₹$amount',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
 
-     ElevatedButton(
-         onPressed: () {
-        setState(() {
-        items.add(
-            BillItem(
-                itemName: itemName,
-                qty: qty,
-                rate: rate,
-                amount: amount,
-            ),
-        );
+              const SizedBox(height: 20),
 
-        print(items);
-        itemName = '';
-        qty = 0;
-        rate = 0;
-        amount = 0;
-        itemController.clear();
-        qtyController.clear();
-        rateController.clear();
-      });
-    },
-    child: const Text('Add Item'),
- ),
-    const SizedBox(height: 20),
-    Expanded(
-        child: ListView.builder(
-            itemCount: items.length,
-            itemBuilder: (context, index){
-                return ListTile(
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    items.add(
+                      BillItem(
+                        itemName: itemName,
+                        qty: qty,
+                        rate: rate,
+                        amount: amount,
+                      ),
+                    );
+
+                    itemName = '';
+                    qty = 0;
+                    rate = 0;
+                    amount = 0;
+
+                    itemController.clear();
+                    qtyController.clear();
+                    rateController.clear();
+                  });
+                },
+                child: const Text('Add Item'),
+              ),
+
+              const SizedBox(height: 10),
+
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    widget.savedBills.add(
+                      Bill(
+                        billNo: widget.savedBills.length + 1,
+                        date: DateTime.now(),
+                        items: List.from(items),
+                        discount: 0,
+                        grandTotal: getGrandTotal(),
+                      ),
+                    );
+
+                    print(widget.savedBills.length);
+
+                    items.clear();
+
+                    itemName = '';
+                    qty = 0;
+                    rate = 0;
+                    amount = 0;
+
+                    itemController.clear();
+                    qtyController.clear();
+                    rateController.clear();
+                  });
+                },
+                child: const Text('Save Bill'),
+              ),
+
+              const SizedBox(height: 20),
+
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
                     title: Text(items[index].itemName),
                     subtitle: Text(
-                        'Qty: ${items[index].qty} | Rate: ${items[index].rate}',
+                      'Qty: ${items[index].qty} | Rate: ${items[index].rate}',
                     ),
                     trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
                         Text(
-                            '₹${items[index].amount}',
-                         ),
-
-                         IconButton(
-                            icon: const Icon(Icons.delete),
-                             onPressed: () {
-                             setState(() {
-                                items.removeAt(index);
-                             });
-                        },
+                          '₹${items[index].amount}',
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () {
+                            setState(() {
+                              items.removeAt(index);
+                            });
+                          },
+                        ),
+                      ],
                     ),
-                ],
-            ),
-                );
-            },
-        ),
-    ),
-    const SizedBox(height: 10),
+                  );
+                },
+              ),
 
-    Text(
-        'Grand Total: ₹${getGrandTotal()}',
-    style: const TextStyle(
-        fontSize: 22,
-        fontWeight: FontWeight.bold,
-     ),
-    ),
-    ],
-  ),
-),
+              const SizedBox(height: 10),
+
+              Text(
+                'Grand Total: ₹${getGrandTotal()}',
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
