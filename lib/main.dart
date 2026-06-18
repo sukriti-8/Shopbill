@@ -1,8 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'screens/home_screen.dart';
 
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Hive.initFlutter();
+
+  await Hive.openBox('bills');
+  await Hive.openBox('settings');
+  final settingsBox = Hive.box('settings');
+
+if (!settingsBox.containsKey('nextBillNo')) {
+  settingsBox.put('nextBillNo', 1);
+}
+
   runApp(const MyApp());
 }
 

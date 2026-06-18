@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import '../models/bill_item.dart';
 import '../models/bill.dart';
 
@@ -32,6 +33,14 @@ class _NewBillScreenState extends State<NewBillScreen> {
   final rateController = TextEditingController();
   final discountController = TextEditingController();
 
+    int currentBillNo=1;
+
+    @override
+    void initState() {
+      super.initState();
+      currentBillNo = widget.nextBillNo;
+    }
+
   double getGrandTotal() {
     double total = 0;
 
@@ -59,11 +68,7 @@ class _NewBillScreenState extends State<NewBillScreen> {
             children: [
 
               Text(
-                'Bill No: ${widget.savedBills.length + 1}',
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                'Bill No: $currentBillNo',
               ),
 
               const SizedBox(height: 8),
@@ -171,37 +176,44 @@ class _NewBillScreenState extends State<NewBillScreen> {
               const SizedBox(height: 10),
 
               ElevatedButton(
-                onPressed: () {
+                 onPressed: () {
                   setState(() {
-                    widget.savedBills.add(
-                      Bill(
-                        billNo: widget.savedBills.length + 1,
-                        date: DateTime.now(),
-                        items: List.from(items),
-                        partyName: partyName,
-                        discount: discount,
-                        grandTotal: getFinalTotal(),
-                      ),
+
+                    final bill = Bill(
+                      billNo: currentBillNo,
+                      date: DateTime.now(),
+                      items: List.from(items),
+                      partyName: partyName,
+                      discount: discount,
+                      grandTotal: getFinalTotal(),
                     );
 
-                    print(widget.savedBills.length);
+                    widget.savedBills.add(bill);
 
+                    final box = Hive.box('bills');
+                    box.add(bill.toMap());
+
+                    final settingsBox = Hive.box('settings');
+                    settingsBox.put('nextBillNo', currentBillNo + 1);
+
+                    currentBillNo++;
                     items.clear();
 
                     itemName = '';
+                    partyName = '';
                     qty = 0;
                     rate = 0;
                     amount = 0;
                     discount = 0;
-
                     itemController.clear();
-                    qtyController.clear();
-                    rateController.clear();
+                    partyController.clear();
+                    qtyController.clear();                              rateController.clear();
                     discountController.clear();
-                  });
-                },
-                child: const Text('Save Bill'),
-              ),
+                   });
+                  },
+                   child: const Text('Save Bill'),
+                 ),
+           
 
               const SizedBox(height: 20),
 
@@ -222,12 +234,12 @@ class _NewBillScreenState extends State<NewBillScreen> {
                           '₹${items[index].amount}',
                         ),
                         IconButton(
-                          icon: const Icon(Icons.delete),
                           onPressed: () {
                             setState(() {
                               items.removeAt(index);
                             });
                           },
+                          icon: const Icon(Icons.delete),
                         ),
                       ],
                     ),

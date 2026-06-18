@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import '../models/bill.dart';
 
 class BillDetailsScreen extends StatefulWidget {
   final Bill bill;
+  final List<Bill> savedBills;
 
   const BillDetailsScreen({
     super.key,
     required this.bill,
+    required this.savedBills,
   });
 
   @override
@@ -34,20 +37,62 @@ class _BillDetailsScreenState extends State<BillDetailsScreen> {
                             content: const Text(
                                 'Are you sure you want to cancel this bill?',
                              ),
-                             actions: [
-                              TextButton(
-                                onPressed: () {
-                                    Navigator.pop(context, false);
+                            actions: [
+                              IconButton(
+                                 icon: const Icon(Icons.cancel),
+                                onPressed: () async {
+                                   
                                 },
-                                child: const Text('Keep Active'),
-                                 ),
-                                TextButton(
-                                    onPressed: () {
-                                        Navigator.pop(context, true);
-                                    },
-                                    child: const Text('Cancel Bill'),
+                              ),
+
+                              IconButton(
+                                 icon: const Icon(Icons.delete),
+                                 onPressed: () async {
+
+                                  final result = await showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Delete Bill'),
+                                      content: const Text(
+                                         'Are you sure you want to permanently delete this bill?',
+                                       ),
+                                       actions: [
+                                         TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context, false);
+                                          },
+                                          child: const Text('Cancel'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                               Navigator.pop(context, true);
+                                              },
+                                              child: const Text('Delete'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+
+                                    if (result == true) {
+
+                                      final box = Hive.box('bills');
+
+                                      final hiveIndex = widget.savedBills.indexOf(widget.bill);
+
+                                      if (hiveIndex >= 0) {
+                                        box.deleteAt(hiveIndex);
+                                        widget.savedBills.removeAt(hiveIndex);
+                                      }
+
+                                      if (context.mounted) {
+                                        Navigator.pop(context);
+                                      }
+                                    }
+                                  },
                                 ),
-                            ],
+                              ],
                         );
                     },
                 );
