@@ -53,14 +53,45 @@ class _HistoryScreenState extends State<HistoryScreen> {
         );
 
         if (result == true) {
-          final box = Hive.box('bills');
+  final choice = await showDialog<String>(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text('Bill Numbering'),
+        content: const Text(
+          'What do you want to do with bill numbering?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context, 'continue');
+            },
+            child: const Text('Continue Numbering'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context, 'restart');
+            },
+            child: const Text('Restart From 1'),
+          ),
+        ],
+      );
+    },
+  );
 
-          await box.clear();
+  final billsBox = Hive.box('bills');
+  final settingsBox = Hive.box('settings');
 
-          setState(() {
-            widget.savedBills.clear();
-          });
-        }
+  await billsBox.clear();
+
+  if (choice == 'restart') {
+    await settingsBox.put('nextBillNo', 1);
+  }
+
+  setState(() {
+    widget.savedBills.clear();
+  });
+}
       },
     ),
   ],
