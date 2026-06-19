@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'receipt_preview_screen.dart';
 
 import '../models/fast_bill_row.dart';
 import '../models/bill.dart';
@@ -14,6 +15,10 @@ class FastBillScreen extends StatefulWidget {
 
 class _FastBillScreenState extends State<FastBillScreen> {
   final partyController = TextEditingController();
+  final discountController = TextEditingController();
+
+bool showDiscount = false;
+double discount = 0;
 
   List<FocusNode> itemFocusNodes = [FocusNode()];
   List<FocusNode> qtyFocusNodes = [FocusNode()];
@@ -32,6 +37,10 @@ class _FastBillScreenState extends State<FastBillScreen> {
 
     return total;
   }
+  double getFinalTotal() {
+  return getGrandTotal() - discount;
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -187,17 +196,49 @@ class _FastBillScreenState extends State<FastBillScreen> {
             const Divider(),
 
             Text(
-              'Grand Total: ₹${getGrandTotal()}',
+              'Grand Total: ₹${getFinalTotal()}',
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
+            const SizedBox(height: 10),
 
+            if (!showDiscount)
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    showDiscount = true;
+                  });
+                },
+                child: const Text('+ Add Discount'),
+              ),
+
+            if (showDiscount) ...[
+              TextField(
+                controller: discountController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Discount',
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    discount = double.tryParse(value) ?? 0;
+                  });
+                },
+              ),
+
+              const SizedBox(height: 10),
+
+              Text(
+                'Discount: ₹$discount',
+              ),
+            ],
             const SizedBox(height: 15),
 
             ElevatedButton(
-              onPressed: () {
+              onPressed: ()  async {
                 List<BillItem> billItems = [];
 
                 for (var row in rows) {
@@ -218,7 +259,7 @@ class _FastBillScreenState extends State<FastBillScreen> {
                 }
 
                 final settingsBox = Hive.box('settings');
-                final billsBox = Hive.box('bills');
+               
 
                 int nextBillNo =
                     settingsBox.get(
@@ -231,24 +272,35 @@ class _FastBillScreenState extends State<FastBillScreen> {
                   date: DateTime.now(),
                   items: billItems,
                   partyName: partyController.text,
-                  discount: 0,
-                  grandTotal: getGrandTotal(),
+                  discount: discount,
+                  grandTotal: getFinalTotal(),
                 );
 
-                billsBox.add(bill.toMap());
+                
 
-                settingsBox.put(
-                  'nextBillNo',
-                  nextBillNo + 1,
-                );
+                
 
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Bill Saved'),
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ReceiptPreviewScreen(
+                      bill: bill,
+                    ),
                   ),
                 );
+
+                if (result == true) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const FastBillScreen(),
+                    ),
+                  );
+                }
+
+                
               },
-              child: const Text('Save Fast Bill'),
+              child: const Text('Preview Receipt'),
             ),
           ],
         ),
