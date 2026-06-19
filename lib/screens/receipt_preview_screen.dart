@@ -53,6 +53,52 @@ class ReceiptPreviewScreen extends StatelessWidget {
                   Text('Party: ${bill.partyName}'),
 
                   const Divider(),
+                  const Row(
+                    children: [
+
+                      Expanded(
+                        flex: 4,
+                        child: Text(
+                          'Item',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          'Qty',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          'Rate',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          'Amt',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const Divider(),
 
                   ...bill.items.map(
                     (item) => Padding(
