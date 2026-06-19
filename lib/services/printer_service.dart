@@ -11,6 +11,24 @@ class PrinterService {
     String? savedMac =
         settingsBox.get('printerMac');
 
+    String shopName =
+    settingsBox.get(
+      'shopName',
+      defaultValue: 'SHOP BILL',
+    );
+
+String shopAddress =
+    settingsBox.get(
+      'shopAddress',
+      defaultValue: '',
+    );
+
+String shopPhone =
+    settingsBox.get(
+      'shopPhone',
+      defaultValue: '',
+    );    
+
     bool connected =
         await PrintBluetoothThermal.connectionStatus;
 
@@ -23,7 +41,16 @@ class PrinterService {
 
     String receipt = '';
 
-    receipt += 'SHOP BILL\n';
+    receipt += '$shopName\n';
+
+    if (shopAddress.isNotEmpty) {
+    receipt += '$shopAddress\n';
+    }
+
+    if (shopPhone.isNotEmpty) {
+    receipt += 'Phone: $shopPhone\n';
+    }
+
     receipt += '----------------\n';
 
     receipt += 'Bill No: ${bill.billNo}\n';
