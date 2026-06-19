@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../models/bill.dart';
 import 'bill_details_screen.dart';
+import '../services/printer_service.dart';
 
 class HistoryScreen extends StatefulWidget {
   final List<Bill> savedBills;
@@ -106,6 +107,22 @@ class _HistoryScreenState extends State<HistoryScreen> {
             subtitle: Text(
               '${bill.partyName}\n₹${bill.grandTotal} | ${bill.status.name}',
             ),
+
+            trailing: IconButton(
+              icon: const Icon(Icons.print),
+              onPressed: () async {
+                await PrinterService.printReceipt(bill);
+
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Bill Reprinted'),
+                    ),
+                  );
+                }
+              },
+            ),
+
             onTap: () {
               Navigator.push(
                 context,

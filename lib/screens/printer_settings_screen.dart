@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+
 class PrinterSettingsScreen extends StatefulWidget {
   const PrinterSettingsScreen({super.key});
 
@@ -23,37 +24,38 @@ class _PrinterSettingsScreenState
       devices = list;
     });
   }
+
   Future<void> connectPrinter(String mac) async {
 
     bool success =
         await PrintBluetoothThermal.connect(
-        macPrinterAddress: mac,
+      macPrinterAddress: mac,
     );
 
     if (success) {
 
-        final settingsBox = Hive.box('settings');
+      final settingsBox = Hive.box('settings');
 
-        settingsBox.put(
+      settingsBox.put(
         'printerMac',
         mac,
-        );
+      );
 
-        setState(() {
+      setState(() {
         connectedMac = mac;
-        });
+      });
 
-        if (mounted) {
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
+          const SnackBar(
             content: Text('Printer Connected'),
-            ),
+          ),
         );
-        }
+      }
     }
-    }
+  }
 
-    Future<void> autoConnectPrinter() async {
+  Future<void> autoConnectPrinter() async {
 
     final settingsBox = Hive.box('settings');
 
@@ -61,47 +63,60 @@ class _PrinterSettingsScreenState
         settingsBox.get('printerMac');
 
     if (savedMac == null) {
-        return;
+      return;
     }
 
-    bool success =
-        await PrintBluetoothThermal.connect(
-        macPrinterAddress: savedMac,
+    setState(() {
+      connectedMac = savedMac;
+    });
+
+    await PrintBluetoothThermal.connect(
+      macPrinterAddress: savedMac,
+    );
+  }
+
+  Future<void> testPrint() async {
+
+    List<int> bytes = [];
+
+    bytes.addAll(
+      'HELLO SHOPBILL\n\n\n'.codeUnits,
     );
 
-    if (success) {
-        setState(() {
-        connectedMac = savedMac;
-        });
+    await PrintBluetoothThermal.writeBytes(
+      bytes,
+    );
+  }
+
+  Future<void> checkStatus() async {
+
+    bool status =
+        await PrintBluetoothThermal.connectionStatus;
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Connected: $status',
+          ),
+        ),
+      );
     }
-    }
-
-Future<void> testPrint() async {
-
-  List<int> bytes = [];
-
-  bytes.addAll(
-    'HELLO SHOPBILL\n\n\n'.codeUnits,
-  );
-
-  await PrintBluetoothThermal.writeBytes(
-    bytes,
-  );
-}
+  }
 
   @override
-    void initState() {
+  void initState() {
     super.initState();
 
     loadPairedDevices();
 
     Future.delayed(
-        const Duration(seconds: 1),
-        () {
+      const Duration(seconds: 1),
+      () {
         autoConnectPrinter();
-        },
+      },
     );
-    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,10 +131,16 @@ Future<void> testPrint() async {
             onPressed: loadPairedDevices,
             child: const Text('Refresh'),
           ),
+
           ElevatedButton(
             onPressed: testPrint,
             child: const Text('Print Test'),
-            ),
+          ),
+
+          ElevatedButton(
+            onPressed: checkStatus,
+            child: const Text('Check Status'),
+          ),
 
           Expanded(
             child: ListView.builder(
@@ -128,21 +149,24 @@ Future<void> testPrint() async {
 
                 final device = devices[index];
 
-            return ListTile(
-  title: Text(device.name),
-  subtitle: Text(device.macAdress),
+                return ListTile(
+                  title: Text(device.name),
+                  subtitle: Text(device.macAdress),
 
-  trailing: ElevatedButton(
-    onPressed: () {
-      connectPrinter(device.macAdress);
-    },
-    child: Text(
-      connectedMac == device.macAdress
-          ? 'Connected'
-          : 'Connect',
-    ),
-  ),
-);
+                  trailing: ElevatedButton(
+                    onPressed: () {
+                      connectPrinter(
+                        device.macAdress,
+                      );
+                    },
+                    child: Text(
+                      connectedMac ==
+                              device.macAdress
+                          ? 'Connected'
+                          : 'Connect',
+                    ),
+                  ),
+                );
               },
             ),
           ),

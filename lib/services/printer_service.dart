@@ -1,3 +1,4 @@
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 import '../models/bill.dart';
 
@@ -5,6 +6,20 @@ class PrinterService {
   static Future<void> printReceipt(
     Bill bill,
   ) async {
+    final settingsBox = Hive.box('settings');
+
+    String? savedMac =
+        settingsBox.get('printerMac');
+
+    bool connected =
+        await PrintBluetoothThermal.connectionStatus;
+
+    if (!connected && savedMac != null) {
+
+    await PrintBluetoothThermal.connect(
+        macPrinterAddress: savedMac,
+    );
+    }
 
     String receipt = '';
 
