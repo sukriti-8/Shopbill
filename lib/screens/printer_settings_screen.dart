@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
-
+import 'package:hive_flutter/hive_flutter.dart';
 class PrinterSettingsScreen extends StatefulWidget {
   const PrinterSettingsScreen({super.key});
 
@@ -25,25 +25,56 @@ class _PrinterSettingsScreenState
   }
   Future<void> connectPrinter(String mac) async {
 
-  bool success =
-      await PrintBluetoothThermal.connect(
-    macPrinterAddress: mac,
-  );
+    bool success =
+        await PrintBluetoothThermal.connect(
+        macPrinterAddress: mac,
+    );
 
-  if (success) {
-    setState(() {
-      connectedMac = mac;
-    });
+    if (success) {
 
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Printer Connected'),
-        ),
-      );
+        final settingsBox = Hive.box('settings');
+
+        settingsBox.put(
+        'printerMac',
+        mac,
+        );
+
+        setState(() {
+        connectedMac = mac;
+        });
+
+        if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+            content: Text('Printer Connected'),
+            ),
+        );
+        }
     }
-  }
-}
+    }
+
+    Future<void> autoConnectPrinter() async {
+
+    final settingsBox = Hive.box('settings');
+
+    String? savedMac =
+        settingsBox.get('printerMac');
+
+    if (savedMac == null) {
+        return;
+    }
+
+    bool success =
+        await PrintBluetoothThermal.connect(
+        macPrinterAddress: savedMac,
+    );
+
+    if (success) {
+        setState(() {
+        connectedMac = savedMac;
+        });
+    }
+    }
 
 Future<void> testPrint() async {
 
@@ -59,10 +90,18 @@ Future<void> testPrint() async {
 }
 
   @override
-  void initState() {
+    void initState() {
     super.initState();
+
     loadPairedDevices();
-  }
+
+    Future.delayed(
+        const Duration(seconds: 1),
+        () {
+        autoConnectPrinter();
+        },
+    );
+    }
 
   @override
   Widget build(BuildContext context) {
