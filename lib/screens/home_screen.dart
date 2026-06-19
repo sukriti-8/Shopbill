@@ -4,6 +4,7 @@ import '../models/bill.dart';
 import 'new_bill_screen.dart';
 import 'history_screen.dart';
 import 'fast_bill_screen.dart';
+import 'printer_settings_screen.dart';
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -103,6 +104,20 @@ Widget build(BuildContext context) {
     );
   },
   child: const Text('Bill History'),
+),
+const SizedBox(height: 10),
+
+ElevatedButton(
+  onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            const PrinterSettingsScreen(),
+      ),
+    );
+  },
+  child: const Text('Printer Settings'),
 ),
           ],
         ),

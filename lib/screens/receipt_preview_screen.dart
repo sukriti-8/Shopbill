@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../models/bill.dart';
+import '../services/printer_service.dart';
 
 class ReceiptPreviewScreen extends StatelessWidget {
   final Bill bill;
@@ -122,19 +123,26 @@ class ReceiptPreviewScreen extends StatelessWidget {
 
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () {
-                            final billsBox = Hive.box('bills');
-                            final settingsBox = Hive.box('settings');
+                          onPressed: () async {
 
-                            billsBox.add(bill.toMap());
+                          final billsBox = Hive.box('bills');
+                          final settingsBox = Hive.box('settings');
 
-                            settingsBox.put(
-                              'nextBillNo',
-                              bill.billNo + 1,
-                            );
+                          billsBox.add(bill.toMap());
 
+                          settingsBox.put(
+                            'nextBillNo',
+                            bill.billNo + 1,
+                          );
+
+                          await PrinterService.printReceipt(
+                            bill,
+                          );
+
+                          if (context.mounted) {
                             Navigator.pop(context, true);
-                          },
+                          }
+                        },
                           child: const Text('Save & Print'),
                         ),
                       ),
