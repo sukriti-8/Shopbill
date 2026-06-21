@@ -10,7 +10,7 @@ class Bill {
   DateTime date;
   List<BillItem> items;
   String partyName;
-  double discount;
+  double discountPercent;
   double grandTotal;
   BillStatus status;
 
@@ -19,7 +19,7 @@ class Bill {
     required this.date,
     required this.items,
     required this.partyName,
-    required this.discount,
+    required this.discountPercent,
     required this.grandTotal,
     this.status = BillStatus.active,
   });
@@ -29,7 +29,7 @@ class Bill {
       'billNo': billNo,
       'date': date.toIso8601String(),
       'partyName': partyName,
-      'discount': discount,
+      'discountPercent': discountPercent,
       'grandTotal': grandTotal,
       'status': status.name,
       'items': items.map((item) => item.toMap()).toList(),
@@ -41,7 +41,7 @@ class Bill {
       billNo: map['billNo'],
       date: DateTime.parse(map['date']),
       partyName: map['partyName'],
-      discount: map['discount'],
+      discountPercent: map['discountPercent'] ?? 0,
       grandTotal: map['grandTotal'],
       status: map['status'] == 'cancelled'
           ? BillStatus.cancelled

@@ -18,7 +18,7 @@ class _FastBillScreenState extends State<FastBillScreen> {
   final discountController = TextEditingController();
 
 bool showDiscount = false;
-double discount = 0;
+double discountPercent = 0;
 
   List<FocusNode> itemFocusNodes = [FocusNode()];
   List<FocusNode> qtyFocusNodes = [FocusNode()];
@@ -38,8 +38,13 @@ double discount = 0;
     return total;
   }
   double getFinalTotal() {
-  return getGrandTotal() - discount;
-}
+    double subtotal = getGrandTotal();
+
+    double discountAmount =
+        subtotal * (discountPercent / 100);
+
+    return subtotal - discountAmount;
+  }
 
 
   @override
@@ -219,12 +224,12 @@ double discount = 0;
                 controller: discountController,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
-                  labelText: 'Discount',
+                  labelText: 'Discount %',
                   border: OutlineInputBorder(),
                 ),
                 onChanged: (value) {
                   setState(() {
-                    discount = double.tryParse(value) ?? 0;
+                    discountPercent = double.tryParse(value) ?? 0;
                   });
                 },
               ),
@@ -232,7 +237,7 @@ double discount = 0;
               const SizedBox(height: 10),
 
               Text(
-                'Discount: ₹$discount',
+                'Discount: ₹$discountPercent',
               ),
             ],
             const SizedBox(height: 15),
@@ -272,7 +277,7 @@ double discount = 0;
                   date: DateTime.now(),
                   items: billItems,
                   partyName: partyController.text,
-                  discount: discount,
+                  discountPercent: discountPercent,
                   grandTotal: getFinalTotal(),
                 );
 

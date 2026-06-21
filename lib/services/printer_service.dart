@@ -97,16 +97,16 @@ class PrinterService {
     receipt +=
         '----------------------------\n';
 
-    if (bill.discount > 0) {
+    if (bill.discountPercent > 0) {
 
       double subtotal =
-          bill.grandTotal + bill.discount;
+          bill.grandTotal / (1 - (bill.discountPercent / 100));
 
       receipt +=
           'Subtotal : ${subtotal.toStringAsFixed(0)}\n';
 
       receipt +=
-          'Discount : ${bill.discount.toStringAsFixed(0)}\n';
+          'Discount : ${bill.discountPercent.toStringAsFixed(0)}%\n';
     }
 
     receipt +=

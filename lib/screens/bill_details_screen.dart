@@ -197,7 +197,7 @@ class _BillDetailsScreenState extends State<BillDetailsScreen> {
             ),
 
             Text(
-              'Subtotal: ₹${widget.bill.grandTotal + widget.bill.discount}',
+              'Subtotal: ₹${widget.bill.grandTotal / (1 - (widget.bill.discountPercent / 100))}',
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -207,7 +207,7 @@ class _BillDetailsScreenState extends State<BillDetailsScreen> {
             const SizedBox(height: 10),
 
             Text(
-              'Discount: ₹${widget.bill.discount}',
+              'Discount: ${widget.bill.discountPercent}%',
               style: const TextStyle(
                 fontSize: 18,
               ),

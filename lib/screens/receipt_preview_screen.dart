@@ -133,7 +133,7 @@ class ReceiptPreviewScreen extends StatelessWidget {
                   const Divider(),
 
                   Text(
-                    'Discount: ₹${bill.discount.toStringAsFixed(0)}',
+                    'Discount: ₹${bill.discountPercent.toStringAsFixed(0)}%',
                   ),
 
                   const SizedBox(height: 5),

@@ -184,7 +184,7 @@ class _NewBillScreenState extends State<NewBillScreen> {
                       date: DateTime.now(),
                       items: List.from(items),
                       partyName: partyName,
-                      discount: discount,
+                      discountPercent: discount,
                       grandTotal: getFinalTotal(),
                     );
 
