@@ -184,6 +184,12 @@ class _BillDetailsScreenState extends State<BillDetailsScreen> {
                   final item = widget.bill.items[index];
 
                   return ListTile(
+                    leading: Text(
+                      '${index + 1}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     title: Text(item.itemName),
                     subtitle: Text(
                       'Qty: ${item.qty} | Rate: ${item.rate}',
@@ -197,7 +203,11 @@ class _BillDetailsScreenState extends State<BillDetailsScreen> {
             ),
 
             Text(
-              'Subtotal: ₹${widget.bill.grandTotal / (1 - (widget.bill.discountPercent / 100))}',
+              'Items Total: ₹${(
+                (widget.bill.grandTotal /
+                    (1 - (widget.bill.discountPercent / 100)))
+                - widget.bill.balanceAdjustment
+              ).toStringAsFixed(0)}',
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -205,7 +215,15 @@ class _BillDetailsScreenState extends State<BillDetailsScreen> {
             ),
 
             const SizedBox(height: 10),
+            if (widget.bill.balanceAdjustment != 0)
+              Text(
+                'Balance Adjustment: ₹${widget.bill.balanceAdjustment}',
+                style: const TextStyle(
+                  fontSize: 18,
+                ),
+              ),
 
+            const SizedBox(height: 10),
             Text(
               'Discount: ${widget.bill.discountPercent}%',
               style: const TextStyle(

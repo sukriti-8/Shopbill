@@ -185,6 +185,7 @@ class _NewBillScreenState extends State<NewBillScreen> {
                       items: List.from(items),
                       partyName: partyName,
                       discountPercent: discount,
+                      balanceAdjustment: 0,
                       grandTotal: getFinalTotal(),
                     );
 

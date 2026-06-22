@@ -11,6 +11,7 @@ class Bill {
   List<BillItem> items;
   String partyName;
   double discountPercent;
+  double balanceAdjustment;
   double grandTotal;
   BillStatus status;
 
@@ -20,6 +21,7 @@ class Bill {
     required this.items,
     required this.partyName,
     required this.discountPercent,
+    required this.balanceAdjustment,
     required this.grandTotal,
     this.status = BillStatus.active,
   });
@@ -30,6 +32,7 @@ class Bill {
       'date': date.toIso8601String(),
       'partyName': partyName,
       'discountPercent': discountPercent,
+      'balanceAdjustment': balanceAdjustment,
       'grandTotal': grandTotal,
       'status': status.name,
       'items': items.map((item) => item.toMap()).toList(),
@@ -42,6 +45,8 @@ class Bill {
       date: DateTime.parse(map['date']),
       partyName: map['partyName'],
       discountPercent: map['discountPercent'] ?? 0,
+      balanceAdjustment:
+         map['balanceAdjustment'] ?? 0,
       grandTotal: map['grandTotal'],
       status: map['status'] == 'cancelled'
           ? BillStatus.cancelled
@@ -49,6 +54,7 @@ class Bill {
       items: (map['items'] as List)
           .map((item) => BillItem.fromMap(item))
           .toList(),
+
     );
   }
 }

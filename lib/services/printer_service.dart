@@ -69,34 +69,42 @@ class PrinterService {
         '----------------------------\n';
 
     receipt +=
-        'Item         Qty Rate   Amt\n';
+        'No. Item         Qty Rate   Amt\n';
 
     receipt +=
         '----------------------------\n';
 
-    for (var item in bill.items) {
+    for (int i = 0; i < bill.items.length; i++) {
 
-      String name =
-          item.itemName.length > 12
-              ? item.itemName.substring(0, 12)
-              : item.itemName.padRight(12);
+  final item = bill.items[i];
 
-      String qty =
-          item.qty.toString().padLeft(4);
+  String sno =
+      '${i + 1}'.padRight(3);
 
-      String rate =
-          item.rate.toStringAsFixed(0).padLeft(6);
+  String name =
+      item.itemName.length > 10
+          ? item.itemName.substring(0, 10)
+          : item.itemName.padRight(10);
 
-      String amount =
-          item.amount.toStringAsFixed(0).padLeft(6);
+  String qty =
+      item.qty.toString().padLeft(4);
 
-      receipt +=
-          '$name$qty$rate$amount\n';
-    }
+  String rate =
+      item.rate.toStringAsFixed(0).padLeft(6);
 
+  String amount =
+      item.amount.toStringAsFixed(0).padLeft(6);
+
+  receipt +=
+      '$sno$name$qty$rate$amount\n';
+}
     receipt +=
         '----------------------------\n';
+    if (bill.balanceAdjustment != 0) {
 
+        receipt +=
+            'Balance Adj : ${bill.balanceAdjustment.toStringAsFixed(0)}\n';
+        }
     if (bill.discountPercent > 0) {
 
       double subtotal =

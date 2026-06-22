@@ -55,6 +55,15 @@ class ReceiptPreviewScreen extends StatelessWidget {
                   const Divider(),
                   const Row(
                     children: [
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          'No',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
 
                       Expanded(
                         flex: 4,
@@ -100,38 +109,60 @@ class ReceiptPreviewScreen extends StatelessWidget {
 
                   const Divider(),
 
-                  ...bill.items.map(
-                    (item) => Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 2),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 4,
-                            child: Text(item.itemName),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Text('${item.qty}'),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Text(
-                              item.rate.toStringAsFixed(0),
+                  ...bill.items.asMap().entries.map(
+                    (entry) {
+                      final index = entry.key;
+                      final item = entry.value;
+
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 2,
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                '${index + 1}',
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Text(
-                              item.amount.toStringAsFixed(0),
+
+                            Expanded(
+                              flex: 4,
+                              child: Text(item.itemName),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
+
+                            Expanded(
+                              flex: 2,
+                              child: Text('${item.qty}'),
+                            ),
+
+                            Expanded(
+                              flex: 2,
+                              child: Text(
+                                item.rate.toStringAsFixed(0),
+                              ),
+                            ),
+
+                            Expanded(
+                              flex: 2,
+                              child: Text(
+                                item.amount.toStringAsFixed(0),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
 
                   const Divider(),
+                  if (bill.balanceAdjustment != 0)
+                    Text(
+                      'Balance Adj: ₹${bill.balanceAdjustment.toStringAsFixed(0)}',
+                    ),
 
+                  const SizedBox(height: 5),
                   Text(
                     'Discount: ₹${bill.discountPercent.toStringAsFixed(0)}%',
                   ),
