@@ -69,7 +69,7 @@ class PrinterService {
         '----------------------------\n';
 
     receipt +=
-        'No. Item         Qty Rate   Amt\n';
+        'Item         Qty Rate   Amt\n';
 
     receipt +=
         '----------------------------\n';
@@ -78,9 +78,7 @@ class PrinterService {
 
   final item = bill.items[i];
 
-  String sno =
-      '${i + 1}'.padRight(3);
-
+  
   String name =
       item.itemName.length > 10
           ? item.itemName.substring(0, 10)
@@ -96,7 +94,7 @@ class PrinterService {
       item.amount.toStringAsFixed(0).padLeft(6);
 
   receipt +=
-      '$sno$name$qty$rate$amount\n';
+      '$name$qty$rate$amount\n';
 }
     receipt +=
         '----------------------------\n';

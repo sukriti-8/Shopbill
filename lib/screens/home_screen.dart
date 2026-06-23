@@ -6,7 +6,7 @@ import 'history_screen.dart';
 import 'fast_bill_screen.dart';
 import 'printer_settings_screen.dart';
 import 'shop_settings_screen.dart';
-
+import 'invoice_screen.dart';
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -91,11 +91,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          'Invoice Module Coming Soon',
-                        ),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const InvoiceScreen(),
                       ),
                     );
                   },

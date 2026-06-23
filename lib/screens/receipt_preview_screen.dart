@@ -55,18 +55,10 @@ class ReceiptPreviewScreen extends StatelessWidget {
                   const Divider(),
                   const Row(
                     children: [
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                          'No',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
+                      
 
                       Expanded(
-                        flex: 4,
+                        flex: 5,
                         child: Text(
                           'Item',
                           style: TextStyle(
@@ -120,15 +112,10 @@ class ReceiptPreviewScreen extends StatelessWidget {
                         ),
                         child: Row(
                           children: [
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                '${index + 1}',
-                              ),
-                            ),
+                            
 
                             Expanded(
-                              flex: 4,
+                              flex: 5,
                               child: Text(item.itemName),
                             ),
 

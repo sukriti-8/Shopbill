@@ -184,12 +184,7 @@ class _BillDetailsScreenState extends State<BillDetailsScreen> {
                   final item = widget.bill.items[index];
 
                   return ListTile(
-                    leading: Text(
-                      '${index + 1}',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    
                     title: Text(item.itemName),
                     subtitle: Text(
                       'Qty: ${item.qty} | Rate: ${item.rate}',

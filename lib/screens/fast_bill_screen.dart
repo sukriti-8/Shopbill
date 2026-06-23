@@ -77,16 +77,33 @@ double discountPercent = 0;
             const Row(
               children: [
                 Expanded(
-                  flex: 1,
+                  flex: 5,
                   child: Text(
-                    'No',
+                    'Item',
                     textAlign: TextAlign.center,
                   ),
                 ),
-                Expanded(flex: 4, child: Text('Item')),
-                Expanded(flex: 2, child: Text('Qty')),
-                Expanded(flex: 2, child: Text('Rate')),
-                Expanded(flex: 2, child: Text('Amt')),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    'Qty',
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    'Rate',
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    'Amt',
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ],
             ),
 
@@ -100,19 +117,9 @@ double discountPercent = 0;
                     padding: const EdgeInsets.symmetric(vertical: 2),
                     child: Row(
                       children: [
+                        
                         Expanded(
-                          flex: 1,
-                          child: Center(
-                            child: Text(
-                              '${index + 1}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 4,
+                          flex: 5,
                           child: TextField(
                             focusNode: itemFocusNodes[index],
                             textInputAction: TextInputAction.next,
