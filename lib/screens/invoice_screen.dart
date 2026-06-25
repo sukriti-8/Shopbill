@@ -12,6 +12,8 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
   final partyController = TextEditingController();
   final addressController = TextEditingController();
   final gstController = TextEditingController();
+  final transportController = TextEditingController();
+  final bundlesController = TextEditingController();
 
   final cgstController = TextEditingController();
   final sgstController = TextEditingController();
@@ -76,111 +78,166 @@ double getGrandTotal() {
         padding: const EdgeInsets.all(12),
         child: Column(
           children: [
-            TextField(
-              controller: partyController,
-              decoration: const InputDecoration(
-                labelText: 'Party Name',
-                border: OutlineInputBorder(),
-              ),
-            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
 
-            const SizedBox(height: 10),
+                Expanded(
+                  flex: 3,
+                  child: Column(
+                    children: [
 
-            TextField(
-              controller: addressController,
-              maxLines: 2,
-              decoration: const InputDecoration(
-                labelText: 'Address',
-                border: OutlineInputBorder(),
-              ),
-            ),
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Party Details (Sold To)',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
 
-            const SizedBox(height: 10),
+                      const SizedBox(height: 10),
 
-            TextField(
-              controller: gstController,
-              decoration: const InputDecoration(
-                labelText: 'GST Number',
-                border: OutlineInputBorder(),
-              ),
-            ),
+                      TextField(
+                        controller: partyController,
+                        decoration: const InputDecoration(
+                          labelText: 'Name',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
 
-            const SizedBox(height: 20),
+                      const SizedBox(height: 10),
 
-            TextField(
-              controller: cgstController,
-              onChanged: (_) {
-                setState(() {});
-                },
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'CGST %',
-                border: OutlineInputBorder(),
-              ),
-            ),
+                      TextField(
+                        controller: addressController,
+                        maxLines: 2,
+                        decoration: const InputDecoration(
+                          labelText: 'Address',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
 
-            const SizedBox(height: 10),
+                      const SizedBox(height: 10),
 
-            TextField(
-              controller: sgstController,
-              onChanged: (_) {
-                setState(() {});
-                },
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'SGST %',
-                border: OutlineInputBorder(),
-              ),
-            ),
+                      TextField(
+                        controller: gstController,
+                        decoration: const InputDecoration(
+                          labelText: 'GST No',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
 
-            const SizedBox(height: 10),
+                const SizedBox(width: 12),
 
-            TextField(
-              controller: igstController,
-              onChanged: (_) {
-                setState(() {});
-                },
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'IGST %',
-                border: OutlineInputBorder(),
-              ),
+                Expanded(
+                  flex: 2,
+                  child: Column(
+                    children: [
+
+                      TextField(
+                        decoration: const InputDecoration(
+                          labelText: 'Invoice No',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+
+                      const SizedBox(height: 10),
+
+                      TextField(
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          labelText: 'Date',
+                          hintText:
+                              '${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}',
+                          border: const OutlineInputBorder(),
+                        ),
+                      ),
+
+                      const SizedBox(height: 10),
+
+                      TextField(
+                        controller: transportController,
+                        decoration: const InputDecoration(
+                          labelText: 'Transport',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+
+                      const SizedBox(height: 10),
+
+                      TextField(
+                        controller: bundlesController,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          labelText: 'No. of Bundles',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
 
             const SizedBox(height: 20),
 
             const Row(
-              children: [
-                Expanded(
-                  flex: 5,
-                  child: Text(
-                    'Particulars',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                children: [
+
+                  Expanded(
+                    flex: 1,
+                    child: Text(
+                      'Sl',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                   ),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Text(
-                    'HSN',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+
+                  Expanded(
+                    flex: 5,
+                    child: Text(
+                      'Particulars',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                   ),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Text(
-                    'Qty',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      'HSN',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                   ),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Text(
-                    'Rate',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      'Qty',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                   ),
-                ),
-              ],
-            ),
+
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      'Rate',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+
+                  Expanded(
+                    flex: 3,
+                    child: Text(
+                      'Taxable',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
 
             const Divider(),
 
@@ -191,125 +248,181 @@ double getGrandTotal() {
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Row(
                   children: [
+                          Expanded(
+                          flex: 1,
+                          child: Center(
+                            child: Text('${entry.key + 1}'),
+                          ),
+                        ),
+
+                        const SizedBox(width: 4),
+
                     Expanded(
                       flex: 5,
-                      child: TextField(
-                        controller: row['item'],
-                        focusNode: focusNodes[entry.key]['item'],
-                        onSubmitted: (_) {
-                        FocusScope.of(context).requestFocus(
-                            focusNodes[entry.key]['hsn'],
-                        );
-},
-                        decoration: const InputDecoration(
-                          isDense: true,
-                           contentPadding: EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 12,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black12),
                         ),
-                          hintText: 'Item',
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(width: 4),
-
-                    Expanded(
-                      flex: 2,
-                      child: TextField(
-                        controller: row['hsn'],
-                        focusNode: focusNodes[entry.key]['hsn'],
-                        onSubmitted: (_) {
-                        FocusScope.of(context).requestFocus(
-                            focusNodes[entry.key]['qty'],
-                        );
-                        },
-                        decoration: const InputDecoration(
-                          isDense: true,
-                           contentPadding: EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 12,
-                            ),
-                          hintText: 'HSN',
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(width: 4),
-
-                    Expanded(
-                      flex: 2,
-                      child: TextField(
-                        controller: row['qty'],
-                        onChanged: (_) {
-                            setState(() {});
-                            },
-                        focusNode: focusNodes[entry.key]['qty'],
-                        onSubmitted: (_) {
-                        FocusScope.of(context).requestFocus(
-                            focusNodes[entry.key]['rate'],
-                        );
-                        },
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          isDense: true,
-                           contentPadding: EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 12,
-                        ),
-                          hintText: 'Qty',
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(width: 4),
-
-                    Expanded(
-                      flex: 2,
-                      child: TextField(
-                        controller: row['rate'],
-                        onChanged: (_) {
-                            setState(() {});
-                            },
-                        focusNode: focusNodes[entry.key]['rate'],
-                        onSubmitted: (_) {
-
-                        if (entry.key == items.length - 1) {
-
-                            setState(() {
-                            items.add({
-                                'item': TextEditingController(),
-                                'hsn': TextEditingController(),
-                                'qty': TextEditingController(),
-                                'rate': TextEditingController(),
-                            });
-
-                            focusNodes.add({
-                                'item': FocusNode(),
-                                'hsn': FocusNode(),
-                                'qty': FocusNode(),
-                                'rate': FocusNode(),
-                            });
-                            });
-
-                            Future.delayed(
-                            const Duration(milliseconds: 100),
-                            () {
-                                FocusScope.of(context).requestFocus(
-                                focusNodes.last['item'],
-                                );
-                            },
+                        child: TextField(
+                          controller: row['item'],
+                          focusNode: focusNodes[entry.key]['item'],
+                          onSubmitted: (_) {
+                            FocusScope.of(context).requestFocus(
+                              focusNodes[entry.key]['hsn'],
                             );
-                        }
-                        },
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          isDense: true,
-                           contentPadding: EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 12,
+                          },
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            isDense: true,
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 8,
                             ),
-                          hintText: 'Rate',
+                            hintText: 'Item',
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(width: 4),
+
+                    Expanded(
+                      flex: 2,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black12),
+                        ),
+                        child: TextField(
+                          controller: row['hsn'],
+                          focusNode: focusNodes[entry.key]['hsn'],
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            isDense: true,
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 8,
+                            ),
+                            hintText: 'HSN',
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(width: 4),
+
+                    Expanded(
+                      flex: 2,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black12),
+                        ),
+                        child: TextField(
+                          controller: row['qty'],
+                          keyboardType: TextInputType.number,
+
+                          onChanged: (_) {
+                            setState(() {});
+                          },
+
+                          focusNode: focusNodes[entry.key]['qty'],
+
+                          onSubmitted: (_) {
+                            FocusScope.of(context).requestFocus(
+                              focusNodes[entry.key]['rate'],
+                            );
+                          },
+
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            isDense: true,
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 8,
+                            ),
+                            hintText: 'Qty',
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(width: 4),
+
+                    Expanded(
+                      flex: 2,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black12),
+                        ),
+                        child: TextField(
+                          controller: row['rate'],
+                          keyboardType: TextInputType.number,
+                          focusNode: focusNodes[entry.key]['rate'],
+
+                          onChanged: (_) {
+                            setState(() {});
+                          },
+
+                          onSubmitted: (_) {
+
+                            if (entry.key == items.length - 1) {
+
+                              setState(() {
+                                items.add({
+                                  'item': TextEditingController(),
+                                  'hsn': TextEditingController(),
+                                  'qty': TextEditingController(),
+                                  'rate': TextEditingController(),
+                                });
+
+                                focusNodes.add({
+                                  'item': FocusNode(),
+                                  'hsn': FocusNode(),
+                                  'qty': FocusNode(),
+                                  'rate': FocusNode(),
+                                });
+                              });
+
+                              Future.delayed(
+                                const Duration(milliseconds: 100),
+                                () {
+                                  FocusScope.of(context).requestFocus(
+                                    focusNodes.last['item'],
+                                  );
+                                },
+                              );
+                            }
+                          },
+
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            isDense: true,
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 8,
+                            ),
+                            hintText: 'Rate',
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+
+                    Expanded(
+                      flex: 3,
+                      child: Container(
+                        height: 44,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black12),
+                        ),
+                        child: Text(
+                          (
+                            (double.tryParse(row['qty']!.text) ?? 0) *
+                            (double.tryParse(row['rate']!.text) ?? 0)
+                          ).toStringAsFixed(2),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
@@ -340,20 +453,124 @@ double getGrandTotal() {
               },
               child: const Text('Add Row'),
             ),
+            
             const SizedBox(height: 20),
 
-            Text(
-            'Taxable Value : ₹${getTaxableValue().toStringAsFixed(2)}',
-            ),
+            Row(
+              children: [
 
-            const SizedBox(height: 5),
+                Expanded(
+                  child: TextField(
+                    controller: cgstController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: "CGST %",
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (_) => setState(() {}),
+                  ),
+                ),
 
-            Text(
-            'Grand Total : ₹${getGrandTotal().toStringAsFixed(2)}',
-            style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-            ),
+                const SizedBox(width: 10),
+
+                Expanded(
+                  child: TextField(
+                    controller: sgstController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: "SGST %",
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (_) => setState(() {}),
+                  ),
+                ),
+
+                const SizedBox(width: 10),
+
+                Expanded(
+                  child: TextField(
+                    controller: igstController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: "IGST %",
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (_) => setState(() {}),
+                  ),
+                ),
+              ],
+),
+            const Divider(thickness: 1.2),
+
+            Align(
+              alignment: Alignment.centerRight,
+              child: SizedBox(
+                width: 260,
+                child: Column(
+                  children: [
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text("Taxable Value"),
+                        Text("₹ ${getTaxableValue().toStringAsFixed(2)}"),
+                      ],
+                    ),
+
+                    const SizedBox(height: 6),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text("CGST"),
+                        Text("${cgstController.text}%"),
+                      ],
+                    ),
+
+                    const SizedBox(height: 6),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text("SGST"),
+                        Text("${sgstController.text}%"),
+                      ],
+                    ),
+
+                    const SizedBox(height: 6),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text("IGST"),
+                        Text("${igstController.text}%"),
+                      ],
+                    ),
+
+                    const Divider(),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "GRAND TOTAL",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        Text(
+                          "₹ ${getGrandTotal().toStringAsFixed(2)}",
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ),
 
             const SizedBox(height: 20),
