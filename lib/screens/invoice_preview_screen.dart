@@ -6,8 +6,9 @@ class InvoicePreviewScreen extends StatelessWidget {
   final String gstNo;
   final List<Map<String, TextEditingController>> items;
   final double cgstPercent;
- final double sgstPercent;
- final double igstPercent;
+  final double sgstPercent;
+  final double igstPercent;
+  final int invoiceNumber;
 
   const InvoicePreviewScreen({
   super.key,
@@ -18,6 +19,7 @@ class InvoicePreviewScreen extends StatelessWidget {
   required this.cgstPercent,
   required this.sgstPercent,
   required this.igstPercent,
+  required this.invoiceNumber,
 });
 
   double getTaxableValue() {
@@ -77,94 +79,186 @@ class InvoicePreviewScreen extends StatelessWidget {
             children: [
 
               const Center(
-                child: Text(
-                  'INVOICE',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
+                child: Column(
+                  children: [
+
+                    Text(
+                      'GUPTA TOOLS CENTRE',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+
+                    SizedBox(height: 4),
+
+                    const Text(
+                      '#15-4-562/5, Osman Shahi, Hyderabad - 500012 (T.S.)',
+                      style: TextStyle(fontSize: 13),
+                    ),
+
+                    const Text(
+                      'GSTIN : 36ACZPA6950G1Z8',
+                      style: TextStyle(fontSize: 13),
+                    ),
+
+                    const Text(
+                      'Cell : 9110760026',
+                      style: TextStyle(fontSize: 13),
+                    ),
+                    SizedBox(height: 15),
+
+                    Text(
+                      'TAX INVOICE',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ),
 
               const SizedBox(height: 20),
 
-              const Text(
-                'Invoice No: 1',
-              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
 
-              Text(
-                'Date: ${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}',
-              ),
+                  Expanded(
+                    flex: 3,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
 
-              const SizedBox(height: 20),
+                        Text(
+                          'Party Details',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
 
-              Text(
-                'Party Name: $partyName',
-              ),
+                        SizedBox(height: 8),
 
-              Text(
-                'Address: $address',
-              ),
+                        Text('Name : $partyName'),
 
-              Text(
-                'GST No: $gstNo',
+                        SizedBox(height: 4),
+
+                        Text('Address : $address'),
+
+                        SizedBox(height: 4),
+
+                        Text('GST No : $gstNo'),
+                      ],
+                    ),
+                  ),
+
+                  Expanded(
+                    flex: 2,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+
+                         Text('Invoice No : $invoiceNumber'),
+
+                        SizedBox(height: 4),
+
+                        Text(
+                          'Date : ${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}',
+                        ),
+
+                        SizedBox(height: 4),
+
+                        const Text('Transport :'),
+
+                        SizedBox(height: 4),
+
+                        const Text('Bundles :'),
+                      ],
+                    ),
+                  ),
+                ]
               ),
 
               const SizedBox(height: 20),
 
               const Divider(),
 
-              const Row(
-                children: [
-                  Expanded(
-                    flex: 4,
-                    child: Text(
-                      'Particulars',
-                      style: TextStyle(
-                        fontWeight:
-                            FontWeight.bold,
-                      ),
+              Table(
+                border: TableBorder.all(
+                  color: Colors.black54,
+                  width: 1,
+                ),
+                columnWidths: const {
+                  0: FlexColumnWidth(0.7),
+                  1: FlexColumnWidth(3.8),
+                  2: FlexColumnWidth(1.4),
+                  3: FlexColumnWidth(1.2),
+                  4: FlexColumnWidth(1.4),
+                  5: FlexColumnWidth(1.8),
+                },
+                children: const [
+
+                  TableRow(
+                    decoration: BoxDecoration(
+                      color: Color(0xfff2f2f2),
                     ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      'HSN',
-                      style: TextStyle(
-                        fontWeight:
-                            FontWeight.bold,
+                    children: [
+
+                      Padding(
+                        padding: EdgeInsets.all(6),
+                        child: Text(
+                          "Sl",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      'Qty',
-                      style: TextStyle(
-                        fontWeight:
-                            FontWeight.bold,
+
+                      Padding(
+                        padding: EdgeInsets.all(6),
+                        child: Text(
+                          "PARTICULARS",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      'Rate',
-                      style: TextStyle(
-                        fontWeight:
-                            FontWeight.bold,
+
+                      Padding(
+                        padding: EdgeInsets.all(6),
+                        child: Text(
+                          "HSN",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: Text(
-                      'Taxable',
-                      style: TextStyle(
-                        fontWeight:
-                            FontWeight.bold,
+
+                      Padding(
+                        padding: EdgeInsets.all(6),
+                        child: Text(
+                          "QTY",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ),
-                    ),
+
+                      Padding(
+                        padding: EdgeInsets.all(6),
+                        child: Text(
+                          "RATE",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+
+                      Padding(
+                        padding: EdgeInsets.all(6),
+                        child: Text(
+                          "TAXABLE",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -188,43 +282,68 @@ class InvoicePreviewScreen extends StatelessWidget {
                 final taxable =
                     qty * rate;
 
-                return Row(
+                return Table(
+                  border: TableBorder.all(
+                    color: Colors.black54,
+                    width: 1,
+                  ),
+                  columnWidths: const {
+                    0: FlexColumnWidth(0.7),
+                    1: FlexColumnWidth(3.8),
+                    2: FlexColumnWidth(1.4),
+                    3: FlexColumnWidth(1.2),
+                    4: FlexColumnWidth(1.4),
+                    5: FlexColumnWidth(1.8),
+                  },
                   children: [
+                    TableRow(
+                      children: [
 
-                    Expanded(
-                      flex: 4,
-                      child: Text(
-                        row['item']!.text,
-                      ),
-                    ),
+                        Padding(
+                          padding: const EdgeInsets.all(6),
+                          child: Text(
+                            '${items.indexOf(row) + 1}',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
 
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        row['hsn']!.text,
-                      ),
-                    ),
+                        Padding(
+                          padding: const EdgeInsets.all(6),
+                          child: Text(row['item']!.text),
+                        ),
 
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        row['qty']!.text,
-                      ),
-                    ),
+                        Padding(
+                          padding: const EdgeInsets.all(6),
+                          child: Text(
+                            row['hsn']!.text,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
 
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        row['rate']!.text,
-                      ),
-                    ),
+                        Padding(
+                          padding: const EdgeInsets.all(6),
+                          child: Text(
+                            row['qty']!.text,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
 
-                    Expanded(
-                      flex: 3,
-                      child: Text(
-                        taxable
-                            .toStringAsFixed(2),
-                      ),
+                        Padding(
+                          padding: const EdgeInsets.all(6),
+                          child: Text(
+                            row['rate']!.text,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.all(6),
+                          child: Text(
+                            taxable.toStringAsFixed(2),
+                            textAlign: TextAlign.right,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 );
@@ -234,30 +353,222 @@ class InvoicePreviewScreen extends StatelessWidget {
 
               const Divider(),
 
-              Text(
-                'Taxable Value : ₹${taxableValue.toStringAsFixed(2)}',
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+
+                  Expanded(
+                    flex: 3,
+                    child: Container(
+                      height: 170,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black54),
+                      ),
+                      padding: const EdgeInsets.all(6),
+                      child: const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+
+                          Text(
+                            'HSN / SAC     UNIT',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+
+                          SizedBox(height: 20),
+
+                          Text('Taxable Value'),
+
+                          SizedBox(height: 12),
+
+                          Text('CGST'),
+
+                          SizedBox(height: 12),
+
+                          Text('SGST'),
+
+                          SizedBox(height: 12),
+
+                          Text('IGST'),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(width: 8),
+
+                  Expanded(
+                    flex: 2,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black54),
+                      ),
+                      padding: const EdgeInsets.all(6),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text("Total Taxable Value"),
+                              Text("₹ ${taxableValue.toStringAsFixed(2)}"),
+                            ],
+                          ),
+
+                          const SizedBox(height: 8),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Add : CGST @ $cgstPercent%"),
+                              Text("₹ ${cgstAmount.toStringAsFixed(2)}"),
+                            ],
+                          ),
+
+                          const SizedBox(height: 8),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Add : SGST @ $sgstPercent%"),
+                              Text("₹ ${sgstAmount.toStringAsFixed(2)}"),
+                            ],
+                          ),
+
+                          const SizedBox(height: 8),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Add : IGST @ $igstPercent%"),
+                              Text("₹ ${igstAmount.toStringAsFixed(2)}"),
+                            ],
+                          ),
+
+                          const Divider(),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                "Total Value After Tax",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                "₹ ${grandTotal.toStringAsFixed(2)}",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
+              const SizedBox(height: 12),
 
-              Text(
-                'CGST : ₹${cgstAmount.toStringAsFixed(2)}',
-              ),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black54),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
 
-              Text(
-                'SGST : ₹${sgstAmount.toStringAsFixed(2)}',
-              ),
+                    Expanded(
+                      flex: 2,
+                      child: Padding(
+                        padding: EdgeInsets.all(6),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
 
-              Text(
-                'IGST : ₹${igstAmount.toStringAsFixed(2)}',
-              ),
+                            Text(
+                              "Bank Details",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
 
-              const SizedBox(height: 10),
+                            SizedBox(height: 6),
 
-              Text(
-                'Grand Total : ₹${grandTotal.toStringAsFixed(2)}',
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight:
-                      FontWeight.bold,
+                            Text("Bank : SBI BANK"),
+                            Text("Branch : Gowliguda"),
+                            Text("A/C : 10009336302"),
+                            Text("IFSC : SBIN0002724"),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    Container(
+                      width: 1,
+                      height: 120,
+                      color: Colors.black38,
+                    ),
+
+                    Expanded(
+                      flex: 3,
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+
+                            Text(
+                              "Goods once sold will not be taken or exchanged.",
+                            ),
+
+                            SizedBox(height: 6),
+
+                            Text(
+                              "SUBJECT TO HYDERABAD JURISDICTION",
+                            ),
+
+                            SizedBox(height: 6),
+
+                            Text(
+                              "We are not responsible for damage or shortage during transit.",
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    Container(
+                      width: 1,
+                      height: 120,
+                      color: Colors.black38,
+                    ),
+
+                    Expanded(
+                      flex: 2,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [
+                          SizedBox(height: 10),
+
+                          Text(
+                            "For GUPTA TOOLS CENTRE",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+
+                          SizedBox(height: 55),
+
+                          Text("Authorised Signatory"),
+
+                          SizedBox(height: 10),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

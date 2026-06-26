@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'invoice_preview_screen.dart';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class InvoiceScreen extends StatefulWidget {
   const InvoiceScreen({super.key});
@@ -18,6 +20,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
   final cgstController = TextEditingController();
   final sgstController = TextEditingController();
   final igstController = TextEditingController();
+  int invoiceNumber = 1;
 
   List<Map<String, TextEditingController>> items = [
     {
@@ -67,6 +70,44 @@ double getGrandTotal() {
       ((double.tryParse(igstController.text) ?? 0) / 100);
 
   return taxable + cgst + sgst + igst;
+}
+Future<void> saveInvoice() async {
+  final prefs = await SharedPreferences.getInstance();
+
+  List<String> history =
+      prefs.getStringList('invoice_history') ?? [];
+
+  history.add(
+    jsonEncode({
+      "party": partyController.text,
+      "date":
+          "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}",
+      "total": getGrandTotal().toStringAsFixed(2),
+    }),
+  );
+
+  await prefs.setStringList(
+    'invoice_history',
+    history,
+  );
+  await prefs.setInt(
+  'invoice_number',
+  invoiceNumber,
+  );
+  invoiceNumber++;
+}
+Future<void> loadInvoiceNumber() async {
+  final prefs = await SharedPreferences.getInstance();
+
+  invoiceNumber =
+      (prefs.getInt('invoice_number') ?? 0) + 1;
+
+  setState(() {});
+}
+@override
+void initState() {
+  super.initState();
+  loadInvoiceNumber();
 }
   @override
   Widget build(BuildContext context) {
@@ -576,34 +617,29 @@ double getGrandTotal() {
             const SizedBox(height: 20),
 
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
+
+                await saveInvoice();
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (_) => InvoicePreviewScreen(
-                                        partyName: partyController.text,
-                                        address: addressController.text,
-                                        gstNo: gstController.text,
-                                        items: items,
+                      partyName: partyController.text,
+                      address: addressController.text,
+                      gstNo: gstController.text,
+                      items: items,
 
-                                        cgstPercent:
-                                            double.tryParse(
-                                                cgstController.text,
-                                            ) ??
-                                            0,
+                      cgstPercent:
+                          double.tryParse(cgstController.text) ?? 0,
 
-                                        sgstPercent:
-                                            double.tryParse(
-                                                sgstController.text,
-                                            ) ??
-                                            0,
+                      sgstPercent:
+                          double.tryParse(sgstController.text) ?? 0,
 
-                                        igstPercent:
-                                            double.tryParse(
-                                                igstController.text,
-                                            ) ??
-                                            0,
-                                        ),
+                      igstPercent:
+                          double.tryParse(igstController.text) ?? 0,
+                      invoiceNumber: invoiceNumber,
+                    ),
                   ),
                 );
               },
