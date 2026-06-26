@@ -120,96 +120,109 @@ double discountPercent = 0;
                         
                         Expanded(
                           flex: 5,
-                          child: TextField(
-                            focusNode: itemFocusNodes[index],
-                            textInputAction: TextInputAction.next,
-                            decoration: const InputDecoration(
-                              isDense: true,
-                              contentPadding: EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 8,
+                          child: SizedBox(
+                            height: 42,
+                            child: TextField(
+                              focusNode: itemFocusNodes[index],
+                              textInputAction: TextInputAction.next,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                isDense: true,
+                                contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 10,
+                                ),
                               ),
+                              onSubmitted: (_) {
+                                FocusScope.of(context).requestFocus(
+                                  qtyFocusNodes[index],
+                                );
+                              },
+                              onChanged: (value) {
+                                rows[index].itemName = value;
+                              },
                             ),
-                            onSubmitted: (_) {
-                              FocusScope.of(context).requestFocus(
-                                qtyFocusNodes[index],
-                              );
-                            },
-                            onChanged: (value) {
-                              rows[index].itemName = value;
-                            },
                           ),
                         ),
 
                         Expanded(
                           flex: 2,
-                          child: TextField(
-                            focusNode: qtyFocusNodes[index],
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                              isDense: true,
-                              contentPadding: EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 8,
+                          child: SizedBox(
+                            height: 42,
+                            child: TextField(
+                              focusNode: qtyFocusNodes[index],
+                              textInputAction: TextInputAction.next,
+                              keyboardType: TextInputType.number,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                isDense: true,
+                                contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 10,
+                                ),
                               ),
+                              onSubmitted: (_) {
+                                FocusScope.of(context).requestFocus(
+                                  rateFocusNodes[index],
+                                );
+                              },
+                              onChanged: (value) {
+                                setState(() {
+                                  rows[index].qty = int.tryParse(value) ?? 0;
+                                });
+                              },
                             ),
-                            onSubmitted: (_) {
-                              FocusScope.of(context).requestFocus(
-                                rateFocusNodes[index],
-                              );
-                            },
-                            onChanged: (value) {
-                              setState(() {
-                                rows[index].qty =
-                                    int.tryParse(value) ?? 0;
-                              });
-                            },
                           ),
                         ),
 
                         Expanded(
                           flex: 2,
-                          child: TextField(
-                            focusNode: rateFocusNodes[index],
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                              isDense: true,
-                              contentPadding: EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 8,
+                          child: SizedBox(
+                            height: 42,
+                            child: TextField(
+                              focusNode: rateFocusNodes[index],
+                              textInputAction: TextInputAction.next,
+                              keyboardType: TextInputType.number,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                isDense: true,
+                                contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 10,
+                                ),
                               ),
-                            ),
-                            onChanged: (value) {
-                              setState(() {
-                                rows[index].rate =
-                                    double.tryParse(value) ?? 0;
+                              onSubmitted: (_) {
+                                if (index == rows.length - 1) {
+                                  setState(() {
+                                   rows.add(
+                                    FastBillRow(
+                                      itemName: '',
+                                      qty: 0,
+                                      rate: 0,
+                                    ),
+                                  );
 
-                                if (
-                                    index == rows.length - 1 &&
-                                    rows[index].itemName.isNotEmpty) {
-                                  rows.add(FastBillRow());
+                                    itemFocusNodes.add(FocusNode());
+                                    qtyFocusNodes.add(FocusNode());
+                                    rateFocusNodes.add(FocusNode());
+                                  });
 
-                                  itemFocusNodes.add(FocusNode());
-                                  qtyFocusNodes.add(FocusNode());
-                                  rateFocusNodes.add(FocusNode());
+                                  Future.delayed(
+                                    const Duration(milliseconds: 100),
+                                    () {
+                                      FocusScope.of(context).requestFocus(
+                                        itemFocusNodes.last,
+                                      );
+                                    },
+                                  );
                                 }
-                              });
-                            },
-                            onSubmitted: (_) {
-                              Future.delayed(
-                                const Duration(milliseconds: 100),
-                                () {
-                                  if (index + 1 <
-                                      itemFocusNodes.length) {
-                                    FocusScope.of(context).requestFocus(
-                                      itemFocusNodes[index + 1],
-                                    );
-                                  }
-                                },
-                              );
-                            },
+                              },
+                              onChanged: (value) {
+                                setState(() {
+                                  rows[index].rate = double.tryParse(value) ?? 0;
+                                });
+                              },
+                            ),
                           ),
                         ),
 
