@@ -578,7 +578,18 @@ class InvoicePreviewScreen extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   onPressed: () async {
-                    await PdfService.printInvoice();
+                    await PdfService.printInvoice(
+                      partyName: partyName,
+                      address: address,
+                      gstNo: gstNo,
+                      invoiceNumber: invoiceNumber,
+                      items: items,
+                      taxableValue: taxableValue,
+                      cgstAmount: cgstAmount,
+                      sgstAmount: sgstAmount,
+                      igstAmount: igstAmount,
+                      grandTotal: grandTotal,
+                    );
                   },
                   icon: const Icon(Icons.picture_as_pdf),
                   label: const Text("Generate PDF"),

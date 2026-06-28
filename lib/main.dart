@@ -10,6 +10,7 @@ Future<void> main() async {
 
   await Hive.openBox('bills');
   await Hive.openBox('settings');
+  await Hive.openBox('invoices');
   final settingsBox = Hive.box('settings');
 
 if (!settingsBox.containsKey('nextBillNo')) {

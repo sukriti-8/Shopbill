@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'invoice_preview_screen.dart';
-import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class InvoiceScreen extends StatefulWidget {
   const InvoiceScreen({super.key});
@@ -72,35 +71,43 @@ double getGrandTotal() {
   return taxable + cgst + sgst + igst;
 }
 Future<void> saveInvoice() async {
-  final prefs = await SharedPreferences.getInstance();
 
-  List<String> history =
-      prefs.getStringList('invoice_history') ?? [];
+  final invoiceBox = Hive.box('invoices');
 
-  history.add(
-    jsonEncode({
-      "party": partyController.text,
-      "date":
-          "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}",
-      "total": getGrandTotal().toStringAsFixed(2),
-    }),
+  invoiceBox.add({
+
+    'invoiceNo': invoiceNumber,
+
+    'party': partyController.text,
+
+    'address': addressController.text,
+
+    'gstNo': gstController.text,
+
+    'date':
+        "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}",
+
+    'total': getGrandTotal(),
+
+  });
+
+  final settingsBox = Hive.box('settings');
+
+  settingsBox.put(
+    'nextInvoiceNo',
+    invoiceNumber + 1,
   );
 
-  await prefs.setStringList(
-    'invoice_history',
-    history,
-  );
-  await prefs.setInt(
-  'invoice_number',
-  invoiceNumber,
-  );
   invoiceNumber++;
 }
 Future<void> loadInvoiceNumber() async {
-  final prefs = await SharedPreferences.getInstance();
 
-  invoiceNumber =
-      (prefs.getInt('invoice_number') ?? 0) + 1;
+  final settingsBox = Hive.box('settings');
+
+  invoiceNumber = settingsBox.get(
+    'nextInvoiceNo',
+    defaultValue: 1,
+  );
 
   setState(() {});
 }
