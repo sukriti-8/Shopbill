@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../services/pdf_service.dart';
 
 class InvoicePreviewScreen extends StatelessWidget {
   final String partyName;
@@ -569,6 +570,18 @@ class InvoicePreviewScreen extends StatelessWidget {
                       ),
                     ),
                   ],
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () async {
+                    await PdfService.printInvoice();
+                  },
+                  icon: const Icon(Icons.picture_as_pdf),
+                  label: const Text("Generate PDF"),
                 ),
               ),
             ],
