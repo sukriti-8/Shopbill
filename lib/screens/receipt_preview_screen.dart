@@ -30,17 +30,74 @@ class ReceiptPreviewScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Center(
-                    child: Text(
-                      'SHOP BILL',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+                 Builder(
+  builder: (context) {
 
-                  const SizedBox(height: 10),
+    final settingsBox = Hive.box('settings');
+
+    final shopName = settingsBox.get(
+      'shopName',
+      defaultValue: 'SHOP BILL',
+    );
+
+    final shopAddress = settingsBox.get(
+      'shopAddress',
+      defaultValue: '',
+    );
+
+    final shopPhone = settingsBox.get(
+      'shopPhone',
+      defaultValue: '',
+    );
+
+    return Column(
+      children: [
+
+        const Divider(thickness: 2),
+
+        Center(
+          child: Text(
+            shopName,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1,
+            ),
+          ),
+        ),
+
+        if (shopAddress.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: Text(
+              shopAddress,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 13,
+              ),
+            ),
+          ),
+
+        if (shopPhone.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(top: 2),
+            child: Text(
+              "Phone : $shopPhone",
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 13,
+              ),
+            ),
+          ),
+
+        const Divider(thickness: 2),
+
+        const SizedBox(height: 10),
+      ],
+    );
+  },
+),
 
                   Text('Bill No: ${bill.billNo}'),
 
@@ -101,47 +158,59 @@ class ReceiptPreviewScreen extends StatelessWidget {
 
                   const Divider(),
 
-                  ...bill.items.asMap().entries.map(
-                    (entry) {
-                      final index = entry.key;
-                      final item = entry.value;
+                  ...bill.items.map((item) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
 
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 2,
-                        ),
-                        child: Row(
-                          children: [
-                            
-
-                            Expanded(
-                              flex: 5,
-                              child: Text(item.itemName),
+                          Text(
+                            item.itemName,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 15,
                             ),
+                          ),
 
-                            Expanded(
-                              flex: 2,
-                              child: Text('${item.qty}'),
-                            ),
+                          const SizedBox(height: 2),
 
-                            Expanded(
-                              flex: 2,
-                              child: Text(
-                                item.rate.toStringAsFixed(0),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+
+                              SizedBox(
+                                width: 35,
+                                child: Text(
+                                  "${item.qty}",
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
-                            ),
 
-                            Expanded(
-                              flex: 2,
-                              child: Text(
-                                item.amount.toStringAsFixed(0),
+                              SizedBox(
+                                width: 45,
+                                child: Text(
+                                  item.rate.toStringAsFixed(0),
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+
+                              SizedBox(
+                                width: 55,
+                                child: Text(
+                                  item.amount.toStringAsFixed(0),
+                                  textAlign: TextAlign.end,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
 
                   const Divider(),
                   if (bill.balanceAdjustment != 0)
@@ -149,25 +218,69 @@ class ReceiptPreviewScreen extends StatelessWidget {
                       'Balance Adj: ₹${bill.balanceAdjustment.toStringAsFixed(0)}',
                     ),
 
+                  const Divider(),
+
+                  if (bill.balanceAdjustment != 0)
+                    Text(
+                      'Balance Adj: ₹${bill.balanceAdjustment.toStringAsFixed(0)}',
+                    ),
+
                   const SizedBox(height: 5),
+
                   Text(
-                    'Discount: ₹${bill.discountPercent.toStringAsFixed(0)}%',
+                    'Discount: ${bill.discountPercent.toStringAsFixed(0)}%',
                   ),
 
                   const SizedBox(height: 5),
 
-                  Text(
-                    'TOTAL: ₹${bill.grandTotal.toStringAsFixed(0)}',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                  const Divider(thickness: 2),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+
+                      const Text(
+                        "TOTAL",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      Text(
+                        "₹${bill.grandTotal.toStringAsFixed(0)}",
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const Divider(thickness: 2),
+
+                  const SizedBox(height: 15),
+
+                  const Center(
+                    child: Text(
+                      "THANK YOU",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                        letterSpacing: 1,
+                      ),
                     ),
                   ),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 6),
 
                   const Center(
-                    child: Text('Thank You'),
+                    child: Text(
+                      "Visit Again",
+                      style: TextStyle(
+                        fontSize: 12,
+                      ),
+                    ),
                   ),
 
                   const SizedBox(height: 20),
@@ -194,7 +307,7 @@ class ReceiptPreviewScreen extends StatelessWidget {
 
                           billsBox.add(bill.toMap());
 
-                          settingsBox.put(
+                           settingsBox.put(
                             'nextBillNo',
                             bill.billNo + 1,
                           );

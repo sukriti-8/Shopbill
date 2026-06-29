@@ -41,15 +41,16 @@ class PrinterService {
 
     String receipt = '';
 
-    receipt += '$shopName\n';
-
+    receipt += '      $shopName\n';
     if (shopAddress.isNotEmpty) {
       receipt += '$shopAddress\n';
     }
 
-    if (shopPhone.isNotEmpty) {
-      receipt += 'Phone: $shopPhone\n';
+   if (shopPhone.isNotEmpty) {
+    receipt += 'Phone: $shopPhone\n';
     }
+
+    receipt += '\n';
 
     receipt +=
         '----------------------------\n';
@@ -61,16 +62,21 @@ class PrinterService {
         'Date    : ${bill.date.day}/${bill.date.month}/${bill.date.year}\n';
 
     if (bill.partyName.trim().isNotEmpty) {
-      receipt +=
-          'Party   : ${bill.partyName}\n';
+    receipt +=
+        'Party   : ${bill.partyName}\n';
     }
+
+    receipt += '\n';
 
     receipt +=
         '----------------------------\n';
 
     receipt +=
-        'Item         Qty Rate   Amt\n';
-
+        'ITEM'.padRight(20) +
+        'QTY'.padLeft(3) +
+        'RATE'.padLeft(6) +
+        'AMT'.padLeft(6) +
+        '\n';
     receipt +=
         '----------------------------\n';
 
@@ -79,22 +85,14 @@ class PrinterService {
   final item = bill.items[i];
 
   
-  String name =
-      item.itemName.length > 10
-          ? item.itemName.substring(0, 10)
-          : item.itemName.padRight(10);
+  String name = item.itemName;
 
-  String qty =
-      item.qty.toString().padLeft(4);
-
-  String rate =
-      item.rate.toStringAsFixed(0).padLeft(6);
-
-  String amount =
-      item.amount.toStringAsFixed(0).padLeft(6);
+  receipt += "$name\n";
 
   receipt +=
-      '$name$qty$rate$amount\n';
+        "${item.qty.toString().padLeft(18)}"
+        "${item.rate.toStringAsFixed(0).padLeft(7)}"
+        "${item.amount.toStringAsFixed(0).padLeft(7)}\n\n";
 }
     receipt +=
         '----------------------------\n';
@@ -116,18 +114,28 @@ class PrinterService {
     }
 
     receipt +=
-        'TOTAL'.padRight(24) +
-        bill.grandTotal.toStringAsFixed(0) +
-        '\n';
+    '============================\n';
+
+    receipt +=
+        'TOTAL'.padRight(18) +
+        '₹${bill.grandTotal.toStringAsFixed(0)}\n';
+
+    receipt +=
+        '============================\n';
 
     receipt +=
         '----------------------------\n';
 
     receipt +=
-        '\nThank You\n\n\n';
+    '\n';
 
-    await PrintBluetoothThermal.writeBytes(
-      receipt.codeUnits,
+    receipt +=
+        '      THANK YOU\n';
+
+    receipt +=
+        '     Visit Again\n\n\n';
+        await PrintBluetoothThermal.writeBytes(
+        receipt.codeUnits,
     );
   }
 }
