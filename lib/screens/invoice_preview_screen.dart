@@ -358,47 +358,9 @@ class InvoicePreviewScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
 
+          
                   Expanded(
-                    flex: 3,
-                    child: Container(
-                      height: 170,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black54),
-                      ),
-                      padding: const EdgeInsets.all(6),
-                      child: const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-
-                          Text(
-                            'HSN / SAC     UNIT',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-
-                          SizedBox(height: 20),
-
-                          Text('Taxable Value'),
-
-                          SizedBox(height: 12),
-
-                          Text('CGST'),
-
-                          SizedBox(height: 12),
-
-                          Text('SGST'),
-
-                          SizedBox(height: 12),
-
-                          Text('IGST'),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(width: 8),
-
-                  Expanded(
-                    flex: 2,
+                  
                     child: Container(
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.black54),
