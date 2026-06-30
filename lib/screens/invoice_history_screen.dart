@@ -131,9 +131,14 @@ class _InvoiceHistoryScreenState
 
                 child: ListTile(
 
-                  leading: CircleAvatar(
+                 leading: CircleAvatar(
+                    radius: 24,
                     child: Text(
-                      "${index + 1}",
+                      "#${invoice['invoiceNo']}",
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
                     ),
                   ),
 
@@ -145,44 +150,45 @@ class _InvoiceHistoryScreenState
                   ),
 
                   subtitle: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-
                       Text(
-                        "Invoice No : ${invoice['invoiceNo']}",
+                        "Invoice #${invoice['invoiceNo']}",
+                        style: const TextStyle(fontWeight: FontWeight.w500),
                       ),
-
-                      Text(
-                        invoice['date'] ?? '',
-                      ),
+                      const SizedBox(height: 2),
+                      Text(invoice['date'] ?? ''),
                     ],
                   ),
 
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
+                  trailing: SizedBox(
+                    width: 70,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
 
-                      Text(
-                        "₹${invoice['total']}",
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-
-                      IconButton(
-                        icon: const Icon(
-                          Icons.delete,
-                          color: Colors.red,
+                        Text(
+                          "₹${invoice['total']}",
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
                         ),
 
-                        onPressed: () async {
+                        const SizedBox(height: 4),
 
-                          await invoiceBox.deleteAt(index);
-
-                        },
-                      ),
-                    ],
+                        InkWell(
+                          onTap: () async {
+                            await invoiceBox.deleteAt(index);
+                          },
+                          child: const Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                            size: 20,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );

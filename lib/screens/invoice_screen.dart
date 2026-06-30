@@ -75,30 +75,17 @@ Future<void> saveInvoice() async {
   final invoiceBox = Hive.box('invoices');
 
   invoiceBox.add({
+  'invoiceNo': invoiceNumber,
+  'party': partyController.text,
+  'address': addressController.text,
+  'gstNo': gstController.text,
+  'date':
+      "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}",
+  'total': getGrandTotal(),
+});
 
-    'invoiceNo': invoiceNumber,
 
-    'party': partyController.text,
 
-    'address': addressController.text,
-
-    'gstNo': gstController.text,
-
-    'date':
-        "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}",
-
-    'total': getGrandTotal(),
-
-  });
-
-  final settingsBox = Hive.box('settings');
-
-  settingsBox.put(
-    'nextInvoiceNo',
-    invoiceNumber + 1,
-  );
-
-  invoiceNumber++;
 }
 Future<void> loadInvoiceNumber() async {
 
@@ -626,6 +613,8 @@ void initState() {
             ElevatedButton(
               onPressed: () async {
 
+                final currentInvoiceNo = invoiceNumber;
+
                 await saveInvoice();
 
                 Navigator.push(
@@ -636,19 +625,26 @@ void initState() {
                       address: addressController.text,
                       gstNo: gstController.text,
                       items: items,
-
                       cgstPercent:
                           double.tryParse(cgstController.text) ?? 0,
-
                       sgstPercent:
                           double.tryParse(sgstController.text) ?? 0,
-
                       igstPercent:
                           double.tryParse(igstController.text) ?? 0,
-                      invoiceNumber: invoiceNumber,
+                      invoiceNumber: currentInvoiceNo,
                     ),
                   ),
                 );
+
+                // NOW increment for the next invoice
+                invoiceNumber++;
+
+                await Hive.box('settings').put(
+                  'nextInvoiceNo',
+                  invoiceNumber,
+                );
+
+                setState(() {});
               },
               child: const Text('Preview Invoice'),
             ),
