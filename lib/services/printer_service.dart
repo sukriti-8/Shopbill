@@ -72,10 +72,10 @@ class PrinterService {
         '----------------------------\n';
 
     receipt +=
-        'ITEM'.padRight(20) +
-        'QTY'.padLeft(3) +
+        'ITEM'.padRight(18) +
+        'QTY'.padLeft(4) +
         'RATE'.padLeft(6) +
-        'AMT'.padLeft(6) +
+        'AMT'.padLeft(7) +
         '\n';
     receipt +=
         '----------------------------\n';
@@ -118,7 +118,7 @@ class PrinterService {
 
     receipt +=
         'TOTAL'.padRight(18) +
-        '₹${bill.grandTotal.toStringAsFixed(0)}\n';
+        'Rs. ${bill.grandTotal.toStringAsFixed(0)}\n';
 
     receipt +=
         '============================\n';
