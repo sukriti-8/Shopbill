@@ -13,11 +13,13 @@ class _InvoiceHistoryScreenState
     extends State<InvoiceHistoryScreen> {
 
   late Box invoiceBox;
+  late Box deletedInvoicesBox;
 
   @override
   void initState() {
     super.initState();
     invoiceBox = Hive.box('invoices');
+    deletedInvoicesBox = Hive.box('deletedInvoices');
   }
 
   @override
@@ -179,7 +181,46 @@ class _InvoiceHistoryScreenState
 
                         InkWell(
                           onTap: () async {
-                            await invoiceBox.deleteAt(index);
+
+                            final result = await showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text("Delete Invoice"),
+                                  content: const Text(
+                                    "Move this invoice to Bin?",
+                                  ),
+                                  actions: [
+
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context, false);
+                                      },
+                                      child: const Text("Cancel"),
+                                    ),
+
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context, true);
+                                      },
+                                      child: const Text("Delete"),
+                                    ),
+
+                                  ],
+                                );
+                              },
+                            );
+
+                            if (result == true) {
+
+                              await deletedInvoicesBox.add(invoice);
+
+                              print("Deleted Invoice Count = ${deletedInvoicesBox.length}");
+
+                              await invoiceBox.deleteAt(index);
+
+                            }
+
                           },
                           child: const Icon(
                             Icons.delete,

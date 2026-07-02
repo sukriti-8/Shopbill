@@ -226,8 +226,113 @@ class _BinScreenState extends State<BinScreen>
               },
             ),
 
-          Center(
-            child: Text("Deleted Invoices"),
+          ValueListenableBuilder(
+            valueListenable: deletedInvoicesBox.listenable(),
+            builder: (context, Box box, _) {
+
+              if (box.isEmpty) {
+                return const Center(
+                  child: Text("No deleted invoices"),
+                );
+              }
+
+              return ListView.builder(
+                itemCount: box.length,
+                itemBuilder: (context, index) {
+
+                  final invoice = box.getAt(index) as Map;
+
+                  return Card(
+                    margin: const EdgeInsets.all(8),
+
+                    child: ListTile(
+
+                      leading: CircleAvatar(
+                        child: Text(
+                          "${invoice['invoiceNo']}",
+                        ),
+                      ),
+
+                      title: Text(
+                        invoice['party'] ?? '',
+                      ),
+
+                      subtitle: Text(
+                        "₹${invoice['total']}",
+                      ),
+
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+
+                          IconButton(
+                            icon: const Icon(
+                              Icons.restore,
+                              color: Colors.green,
+                            ),
+                            onPressed: () async {
+
+                              final invoicesBox = Hive.box('invoices');
+
+                              await invoicesBox.add(invoice);
+
+                              await deletedInvoicesBox.deleteAt(index);
+
+                            },
+                          ),
+
+                          IconButton(
+                            icon: const Icon(
+                              Icons.delete_forever,
+                              color: Colors.red,
+                            ),
+                            onPressed: () async {
+
+                              final result = await showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text("Delete Permanently"),
+                                    content: const Text(
+                                      "This invoice cannot be recovered.",
+                                    ),
+                                    actions: [
+
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context, false);
+                                        },
+                                        child: const Text("Cancel"),
+                                      ),
+
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context, true);
+                                        },
+                                        child: const Text("Delete"),
+                                      ),
+
+                                    ],
+                                  );
+                                },
+                              );
+
+                              if (result == true) {
+
+                                await deletedInvoicesBox.deleteAt(index);
+
+                              }
+
+                            },
+                          ),
+
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
           ),
         ],
       ),
