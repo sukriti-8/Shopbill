@@ -3,7 +3,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
-
+import '../models/bill.dart';
+import 'bill_details_screen.dart';
 import 'invoice_preview_screen.dart';
 
 class BinScreen extends StatefulWidget {
@@ -141,7 +142,21 @@ class _BinScreenState extends State<BinScreen>
                       margin: const EdgeInsets.all(8),
 
                       child: ListTile(
+                        onTap: () {
 
+                          final restoredBill = Bill.fromMap(bill);
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => BillDetailsScreen(
+                                bill: restoredBill,
+                                savedBills: const [],
+                              ),
+                            ),
+                          );
+
+                        },
                         leading: CircleAvatar(
                           child: Text(
                             "${bill['billNo']}",
