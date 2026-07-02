@@ -23,8 +23,104 @@ class _BillDetailsScreenState extends State<BillDetailsScreen> {
       appBar: AppBar(
         title: Text('Bill #${widget.bill.billNo}'),
         actions: [
+
           IconButton(
-            icon: const Icon(Icons.cancel),
+            icon: const Icon(
+              Icons.delete,
+              color: Colors.red,
+            ),
+            onPressed: () async {
+
+              final result = await showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text("Delete Bill"),
+                    content: const Text(
+                      "Move this bill to Bin?",
+                    ),
+                    actions: [
+
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context, false);
+                        },
+                        child: const Text("Cancel"),
+                      ),
+
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context, true);
+                        },
+                        child: const Text("Delete"),
+                      ),
+
+                    ],
+                  );
+                },
+              );
+
+              if (result == true) {
+
+                print("DELETE CONFIRMED");
+
+                final billsBox = Hive.box('bills');
+                final deletedBillsBox = Hive.box('deletedBills');
+
+                final hiveIndex = widget.savedBills.indexOf(widget.bill);
+
+                print("Hive Index = $hiveIndex");
+
+                if (hiveIndex >= 0) {
+
+                  print("Adding to deletedBills");
+
+                  await deletedBillsBox.add({
+
+                    'billNo': widget.bill.billNo,
+                    'partyName': widget.bill.partyName,
+                    'date': widget.bill.date.toIso8601String(),
+                    'grandTotal': widget.bill.grandTotal,
+                    'discountPercent': widget.bill.discountPercent,
+                    'balanceAdjustment': widget.bill.balanceAdjustment,
+                    'status': widget.bill.status.name,
+
+                    'items': widget.bill.items.map((item) {
+
+                      return {
+
+                        'itemName': item.itemName,
+                        'qty': item.qty,
+                        'rate': item.rate,
+                        'amount': item.amount,
+
+                      };
+
+                    }).toList(),
+
+                  });
+                  print("Deleting from bills");
+
+                  await billsBox.deleteAt(hiveIndex);
+
+                  print("Removing from list");
+
+                  widget.savedBills.removeAt(hiveIndex);
+
+                  print("DONE");
+                }
+
+                if (mounted) {
+                  print("POP SCREEN");
+                  Navigator.pop(context);
+                }
+              }
+
+            },
+          ),
+
+          IconButton(
+    icon: const Icon(Icons.cancel),
             onPressed: () async {
 
             if (widget.bill.status == BillStatus.active) {
@@ -38,62 +134,23 @@ class _BillDetailsScreenState extends State<BillDetailsScreen> {
                                 'Are you sure you want to cancel this bill?',
                              ),
                             actions: [
-                              IconButton(
-                                 icon: const Icon(Icons.cancel),
-                                onPressed: () async {
-                                   
+
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context, false);
                                 },
+                                child: const Text("No"),
                               ),
 
-                              IconButton(
-                                 icon: const Icon(Icons.delete),
-                                 onPressed: () async {
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context, true);
+                                },
+                                child: const Text("Yes"),
+                              ),
 
-                                  final result = await showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title: const Text('Delete Bill'),
-                                      content: const Text(
-                                         'Are you sure you want to permanently delete this bill?',
-                                       ),
-                                       actions: [
-                                         TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context, false);
-                                          },
-                                          child: const Text('Cancel'),
-                                          ),
-                                          TextButton(
-                                            onPressed: () {
-                                               Navigator.pop(context, true);
-                                              },
-                                              child: const Text('Delete'),
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
-
-                                    if (result == true) {
-
-                                      final box = Hive.box('bills');
-
-                                      final hiveIndex = widget.savedBills.indexOf(widget.bill);
-
-                                      if (hiveIndex >= 0) {
-                                        box.deleteAt(hiveIndex);
-                                        widget.savedBills.removeAt(hiveIndex);
-                                      }
-
-                                      if (context.mounted) {
-                                        Navigator.pop(context);
-                                      }
-                                    }
-                                  },
-                                ),
-                              ],
-                        );
+                            ],
+                                                    );
                     },
                 );
 

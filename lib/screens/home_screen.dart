@@ -8,6 +8,7 @@ import 'printer_settings_screen.dart';
 import 'shop_settings_screen.dart';
 import 'invoice_screen.dart';
 import 'invoice_history_screen.dart';
+import 'bin_screen.dart';
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -141,6 +142,23 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   },
                   child: const Text('INVOICE HISTORY'),
+                ),
+              ),
+              const SizedBox(height: 15),
+
+              SizedBox(
+                width: 250,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const BinScreen(),
+                      ),
+                    );
+                  },
+                  child: const Text('BIN'),
                 ),
               ),
 

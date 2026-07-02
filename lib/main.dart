@@ -11,6 +11,8 @@ Future<void> main() async {
   await Hive.openBox('bills');
   await Hive.openBox('settings');
   await Hive.openBox('invoices');
+  await Hive.openBox('deletedBills');
+  await Hive.openBox('deletedInvoices');
   final settingsBox = Hive.box('settings');
 
 if (!settingsBox.containsKey('nextBillNo')) {

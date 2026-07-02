@@ -72,10 +72,10 @@ class PrinterService {
         '----------------------------\n';
 
     receipt +=
-        'ITEM'.padRight(18) +
+        'ITEM'.padRight(16) +
         'QTY'.padLeft(4) +
-        'RATE'.padLeft(6) +
-        'AMT'.padLeft(7) +
+        'RATE'.padLeft(5) +
+        'AMT'.padLeft(5) +
         '\n';
     receipt +=
         '----------------------------\n';
