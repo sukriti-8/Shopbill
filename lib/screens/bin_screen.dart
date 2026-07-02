@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/cupertino.dart';
+
+import 'invoice_preview_screen.dart';
 
 class BinScreen extends StatefulWidget {
   const BinScreen({super.key});
@@ -246,6 +251,31 @@ class _BinScreenState extends State<BinScreen>
                     margin: const EdgeInsets.all(8),
 
                     child: ListTile(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => InvoicePreviewScreen(
+                              partyName: invoice['party'] ?? '',
+                              address: invoice['address'] ?? '',
+                              gstNo: invoice['gstNo'] ?? '',
+                              items: (invoice['items'] as List)
+                                  .map<Map<String, TextEditingController>>((item) {
+                                return {
+                                  'item': TextEditingController(text: item['item']),
+                                  'hsn': TextEditingController(text: item['hsn']),
+                                  'qty': TextEditingController(text: item['qty']),
+                                  'rate': TextEditingController(text: item['rate']),
+                                };
+                              }).toList(),
+                              cgstPercent: invoice['cgstPercent'] ?? 0,
+                              sgstPercent: invoice['sgstPercent'] ?? 0,
+                              igstPercent: invoice['igstPercent'] ?? 0,
+                              invoiceNumber: invoice['invoiceNo'],
+                            ),
+                          ),
+                        );
+                      },
 
                       leading: CircleAvatar(
                         child: Text(

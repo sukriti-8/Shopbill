@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'invoice_details_screen.dart';
 
 class InvoiceDetailsScreen extends StatelessWidget {
   final Map invoice;

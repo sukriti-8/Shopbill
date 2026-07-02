@@ -74,15 +74,75 @@ Future<void> saveInvoice() async {
 
   final invoiceBox = Hive.box('invoices');
 
+  double taxable = getTaxableValue();
+
+  double cgst =
+      taxable *
+      ((double.tryParse(cgstController.text) ?? 0) / 100);
+
+  double sgst =
+      taxable *
+      ((double.tryParse(sgstController.text) ?? 0) / 100);
+
+  double igst =
+      taxable *
+      ((double.tryParse(igstController.text) ?? 0) / 100);
+
   invoiceBox.add({
-  'invoiceNo': invoiceNumber,
-  'party': partyController.text,
-  'address': addressController.text,
-  'gstNo': gstController.text,
-  'date':
-      "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}",
-  'total': getGrandTotal(),
-});
+
+    'invoiceNo': invoiceNumber,
+
+    'party': partyController.text,
+
+    'address': addressController.text,
+
+    'gstNo': gstController.text,
+
+    'date':
+        "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}",
+
+    'transport': transportController.text,
+
+    'bundles': bundlesController.text,
+
+    'items': items.map((row) {
+
+        final qty =
+            double.tryParse(row['qty']!.text) ?? 0;
+
+        final rate =
+            double.tryParse(row['rate']!.text) ?? 0;
+
+        return {
+          'item': row['item']!.text,
+          'hsn': row['hsn']!.text,
+          'qty': row['qty']!.text,
+          'rate': row['rate']!.text,
+          'amount': (qty * rate).toStringAsFixed(2),
+        };
+
+      }).toList(),
+
+    'taxableValue': taxable,
+
+    'cgstPercent':
+        double.tryParse(cgstController.text) ?? 0,
+
+    'sgstPercent':
+        double.tryParse(sgstController.text) ?? 0,
+
+    'igstPercent':
+        double.tryParse(igstController.text) ?? 0,
+
+    'cgstAmount': cgst,
+
+    'sgstAmount': sgst,
+
+    'igstAmount': igst,
+
+    'total': getGrandTotal(),
+
+  });
 
 
 
